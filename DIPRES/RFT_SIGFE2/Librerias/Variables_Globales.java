@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.*;
 
+import org.eclipse.hyades.execution.runtime.datapool.IDatapoolIterator;
+
 import com.rational.test.ft.script.RationalTestScript;
 
 /**
@@ -30,6 +32,17 @@ public abstract class Variables_Globales extends RationalTestScript
     /**
      * Variables Datos de Pruebas
      */
+    /**Requerimiento**/
+    public static IDatapoolIterator iDP_RP_CombCat;
+    public static IDatapoolIterator iDP_RP_ConcPres;
+    public static String sDP_RP_CombCat = "/Escenarios/E2/RP_CombinaCatalogos.rftdp";
+    public static String sDP_RP_ConcPres = "/Escenarios/E2/RP_ConceptosPresupuestarios.rftdp";
+    public static String sRP_ID = "";
+    public static String sRP_CAT_ID = "";
+    
+    public static int iContador = 0;
+    public static int iContador2 = 0;
+    
     public static String sUsuario = "";
     public static String sCodEmpresa = "";
     public static Vector vtrLista				= new Vector ();

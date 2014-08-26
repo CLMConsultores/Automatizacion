@@ -36,8 +36,8 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Generar extends RP_Multiple_Gast
 //		
 //		// HTML Browser
 //		// Document: Autenticacion: http://192.168.203.10/sigfe/faces/autenticacion?_afrLoop=427905388800638&_afrWindowMode=0&_adf.ctrl-state=hpa6rjt9u_9
-//		text_j_username().setText(dpString("Username"));
-//		text_j_password().setText(dpString("Password"));
+//		text_j_username().setText("Usua_0401013");
+//		text_j_password().setText("usuario1234");
 //		button_ingresarsubmit().click();
 //		/****************************************************************************/
 //		
@@ -68,36 +68,94 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Generar extends RP_Multiple_Gast
 //		
 //
 //		/**Crear Detalle(Agregar Combinaciones de Catálogo)**/
+//		//Indicar el ID del Requerimiento
+		sRP_ID = dpString("RP_ID");
 //		button_crearDetallesubmit().click();
-//		
 //		sleep(2.0);		
-//
-//		ClicObjeto (htmlTable_Programas_Internos(),"Sin Aplicación", "Html.LABEL");		
-//		ClicObjeto (htmlTable_UnidadesDemandantes(),"Contralor General De La República", "Html.LABEL");		
-//		ClicObjeto (htmlTable_ProgramaPres(),"P01-Contraloría General de la República", "Html.LABEL");		
-//		button_agregarCombinaciónsubmi().click();
-//		
-//		ClicObjeto (htmlTable_Programas_Internos(),"Remodelación de Oficinas de la Fiscalía y Tribunal de Cuentas", "Html.LABEL");		
-//		ClicObjeto (htmlTable_UnidadesDemandantes(),"Juzgado de Cuentas", "Html.LABEL");		
-//		ClicObjeto (htmlTable_ProgramaPres(),"P01-Contraloría General de la República", "Html.LABEL");		
-//		button_agregarCombinaciónsubmi().click();
-//		
-//		ClicObjeto (htmlTable_Programas_Internos(),"Control Centralizado de Seguridad", "Html.LABEL");		
-//		ClicObjeto (htmlTable_UnidadesDemandantes(),"Secretaría General", "Html.LABEL");		
-//		ClicObjeto (htmlTable_ProgramaPres(),"P01-Contraloría General de la República", "Html.LABEL");		
-//		button_agregarCombinaciónsubmi().click();		
+		
+		//Inicializa el DP de Combinacion de Catalogos
+		iDP_RP_CombCat = InicializaDP(sDP_RP_CombCat);
+//		iContador = 1;
+//		while(iDP_RP_CombCat.dpString("RP_CAT_ID").equals(sRP_ID + iContador))
+//		{			
+//			ClicObjeto (htmlTable_Programas_Internos(),iDP_RP_CombCat.dpString("RP_CAT_ProgramaInterno"), "Html.LABEL");		
+//			ClicObjeto (htmlTable_UnidadesDemandantes(),iDP_RP_CombCat.dpString("RP_CAT_UnidadDemandante"), "Html.LABEL");		
+//			ClicObjeto (htmlTable_ProgramaPres(),iDP_RP_CombCat.dpString("RP_CAT_ProgramaPresupuestario"), "Html.LABEL");		
+//			button_agregarCombinaciónsubmi().click();
+//			// Si el datapool no ha terminado, entonces avanza al proximo registro
+//			if (!iDP_RP_CombCat.dpDone()){  
+//				iDP_RP_CombCat.dpNext();
+//				//Aumentar el contador
+//				iContador++;
+//			}
+//		}
+//		// Confirmar las combinaciones de catalogos
 //		button_aceptarsubmit().click();
-//		
+//		sleep(2.0);
+//		// Resetear el datapool
+//		iDP_RP_CombCat.dpReset();
 //		/****************************************************************************/
 
-		/**Catalogo 1 - Agregar Conceptos Presupuestarios.**/		
-		ClicLink(html_idPgTplPglRequerimientos(),".id","idPgTpl:itAgrps:0:cci1:clkAddConc");		
-		// Data Driven Code inserted on 25/08/2014
-		text_CodigoConcepto().setText(dpString("RP_CP1"));
-		button_buscarsubmit().click();
-		sleep(2.0);
-		checkBox_svwBuscarConceptoSMSm().click();
-		button_agregarsubmit().click();
+		/**Catalogos - Agregar Conceptos Presupuestarios.**/
+		//Inicializa el DP de Combinacion de Catalogos
+		iDP_RP_CombCat = InicializaDP(sDP_RP_CombCat);
+		iContador = 1;
+		iContador2 = 0;
+		while(iDP_RP_CombCat.dpString("RP_CAT_ID").equals(sRP_ID + iContador))
+		{	
+			//Abrir ventana de busqueda de conceptos
+			ClicLink(html_idPgTplPglRequerimientos(),".id","idPgTpl:itAgrps:" + iContador2 + ":cci1:clkAddConc");
+			//Inicializa el DP de Conceptos Presupuestarios
+			iDP_RP_ConcPres = InicializaDP(sDP_RP_ConcPres);
+			//Seleccion de Conceptos Presupuestarios
+			while(iDP_RP_ConcPres.dpString("RP_CAT_ID").equals(iDP_RP_CombCat.dpString("RP_CAT_ID")))
+			{	
+				// Data Driven Code inserted on 25/08/2014
+				text_CodigoConcepto().setText(iDP_RP_ConcPres.dpString("RP_IDConcepto"));
+				button_buscarsubmit().click();
+				sleep(2.0);
+				checkBox_svwBuscarConceptoSMSm().click();
+				button_agregarsubmit().click();
+				// Si el datapool no ha terminado, entonces avanza al proximo registro
+				if (!iDP_RP_ConcPres.dpDone()){  
+					iDP_RP_ConcPres.dpNext();
+				}
+			}
+			//Confirma la seleccion de los Cocneptos Presupuestarios
+			button_confirmarSelecciónsubmi().click();
+			// Resetear el datapool
+			iDP_RP_ConcPres.dpReset();
+			sleep(2.0);
+			
+			// Ingreso de montos
+			while(iDP_RP_ConcPres.dpString("RP_CAT_ID").equals(iDP_RP_CombCat.dpString("RP_CAT_ID")))
+			{
+				browser_htmlBrowser(document_bienvenidASIGFE(),DEFAULT_FLAGS).inputKeys("{TAB}");
+				browser_htmlBrowser(document_bienvenidASIGFE(),DEFAULT_FLAGS).inputChars(iDP_RP_ConcPres.dpString("RP_Monto"));
+				browser_htmlBrowser(document_bienvenidASIGFE(),DEFAULT_FLAGS).inputKeys("{TAB}");
+				sleep(1.0);
+				// Si el datapool no ha terminado, entonces avanza al proximo registro
+				if (!iDP_RP_ConcPres.dpDone())  
+					iDP_RP_ConcPres.dpNext();				
+			}
+			//Confirma los montos de los Conceptos Presupuestarios
+			button_aceptarsubmit2().click();
+			sleep(2.0);
+			
+			// Si el datapool no ha terminado, entonces avanza al proximo registro
+			if (!iDP_RP_CombCat.dpDone()){  
+				iDP_RP_CombCat.dpNext();
+				//Aumentar el contador
+				iContador++;
+				//Aumentar el contador2
+				iContador2++;
+			}
+			
+		}
+		
+		stop();		
+				
+		
 		
 		// Data Driven Code inserted on 25/08/2014
 		text_CodigoConcepto().setText(dpString("RP_CP2"));
@@ -119,8 +177,7 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Generar extends RP_Multiple_Gast
 		sleep(2.0);
 		checkBox_svwBuscarConceptoSMSm().click();
 		button_agregarsubmit().click();
-		button_confirmarSelecciónsubmi().click();				
-		sleep(2.0);
+		
 		
 		// Ingreso de montos
 		for (int x=0;x<4;x++){
@@ -137,6 +194,7 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Generar extends RP_Multiple_Gast
 		stop();
 		
 		ClicLink(html_idPgTplPglRequerimientos(),".id","idPgTpl:itAgrps:1:cci1:clkAddConc");
+
 		button_cancelarsubmit().click();
 		sleep(2.0);
 		ClicLink(html_idPgTplPglRequerimientos(),".id","idPgTpl:itAgrps:2:cci1:clkAddConc");

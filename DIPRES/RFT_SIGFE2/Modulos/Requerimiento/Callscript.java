@@ -1,4 +1,7 @@
 package Modulos.Requerimiento;
+import org.eclipse.hyades.execution.runtime.datapool.IDatapool;
+import org.eclipse.hyades.execution.runtime.datapool.IDatapoolIterator;
+
 import resources.Modulos.Requerimiento.CallscriptHelper;
 import com.rational.test.ft.*;
 import com.rational.test.ft.object.interfaces.*;
@@ -67,8 +70,33 @@ public class Callscript extends CallscriptHelper
 //		ClicLink(".id","idPgTpl:itAgrps:2:cci1:clkAddConc");
 //		button_cancelarsubmit().click();
 		
+		SecondDataPool();
+		
+		
+		
 		
 		
 	}
+	
+	public void SecondDataPool() {
+
+
+		sRP_ID="1";
+		
+		iDP_RP_CombCat = InicializaDP(sDP_RP_CombCat);
+		
+		iContador = 1;
+		while(iDP_RP_CombCat.dpString("RP_CAT_ID").equals(sRP_ID + iContador))
+		{
+
+		// Get a value from the second datapool, first record
+			System.out.println(iDP_RP_CombCat.dpString("RP_CAT_ProgramaInterno"));
+			iContador++;
+			if (!iDP_RP_CombCat.dpDone()) 
+				iDP_RP_CombCat.dpNext();
+		}
+	}
+	
+	
 }
 

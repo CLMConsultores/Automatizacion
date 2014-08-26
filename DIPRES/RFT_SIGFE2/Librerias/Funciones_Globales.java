@@ -12,6 +12,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.hyades.execution.runtime.datapool.IDatapool;
+import org.eclipse.hyades.execution.runtime.datapool.IDatapoolIterator;
+
 
 /**
  * Description   : Super class for script helper
@@ -21,6 +24,37 @@ import java.util.Date;
  */
 public abstract class Funciones_Globales extends Variables_Globales 
 {	
+	
+	/**
+	 * Function: InicializaDP
+	 * Description: Se encarga de inicializar el datapool requerido
+	 * @param sDataPool (String)
+	 * @return 
+	 * @author Leafar Maina
+	 * Fecha: 25/06/2008
+	 **/
+	public IDatapoolIterator InicializaDP(String sDataPool) {
+
+		// Point to the datapool location that was created
+		java.io.File dpFile = new java.io.File(
+				(String) getOption(IOptionName.DATASTORE), sDataPool);
+		// Load the datapool using RFT IDataPoolFactory
+		IDatapool dpLector = dpFactory().load(dpFile, true);
+
+		// Open the datapool using RFT IDataPoolFactory
+		IDatapoolIterator iDP = dpFactory().open(dpLector, null);
+
+		// After it is opened, initilize the datapool to access the data
+		iDP.dpInitialize(dpLector);
+		
+		// Retornar el iterador de datapool
+		return iDP;		
+		
+	}
+	
+	
+	
+	
 	/**
 	 * Function: FormatoFecha
 	 * Description: Se encarga de convertir una fecha de entrada en el formato aceptado por la aplicacion SADE.
