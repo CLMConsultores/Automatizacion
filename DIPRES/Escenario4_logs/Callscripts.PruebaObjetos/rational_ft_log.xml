@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestLog>
+	<Event dpIter="0">
+		<Event Timestamp="19 de agosto de 2014 12:37:53 CLT" Type="Script Start" Headline="Inicio de script [Callscripts.PruebaObjetos]" Result="INFORMATION">
+			<Property line_number="1"/>
+			<Property script_iter_count="0"/>
+			<dpStore>
+			<dpVariable idPgTplTitulo="Requerimiento1"/>
+			<dpVariable idPgTplDescripcion="Requerimiento"/>
+			<dpVariable Seleccione="Ley de Presupuestos"/></dpStore>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+			<Property script_id="Callscripts.PruebaObjetos.java"/>
+			<Property scriptDpName="resources\Callscripts\PruebaObjetos.rftxdp"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:54 CLT" Type="Export Event" Headline="getProperty en la Link idDocPrincipal::skip" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:54 CLT" Type="Export Event" Headline="getProperty en la Link Cerrar" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:54 CLT" Type="Export Event" Headline="getProperty en la Link Cambiar Tamaño" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:54 CLT" Type="Export Event" Headline="getProperty en la Link Ir a Bienvenida" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:55 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:idCambioPassword" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:55 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:idCoLiCerrarSesion" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:55 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:55 CLT" Type="Export Event" Headline="getProperty en la Link Requerimiento" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:56 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:56 CLT" Type="Export Event" Headline="getProperty en la Link Compromiso" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:56 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:57 CLT" Type="Export Event" Headline="getProperty en la Link Devengo" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:57 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:57 CLT" Type="Export Event" Headline="getProperty en la Link Contabilidad" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:57 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:58 CLT" Type="Export Event" Headline="getProperty en la Link Tesorería" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:58 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:58 CLT" Type="Export Event" Headline="getProperty en la Link Procesos Técnicos" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:58 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:59 CLT" Type="Export Event" Headline="getProperty en la Link Funcionalidades Complementarias" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:59 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:59 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:37:59 CLT" Type="Export Event" Headline="getProperty en la Link Banco de Datos" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:00 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:00 CLT" Type="Export Event" Headline="getProperty en la Link Reportabilidad Institucional" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:00 CLT" Type="Export Event" Headline="getProperty en la Link Html.A" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:00 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:linkVisualizarHide" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:01 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:linkBusquedaAvanzadaVP" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:01 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:linkBusquedaSimpleVP" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:01 CLT" Type="Export Event" Headline="getProperty en la Link Seleccionar Fecha" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:02 CLT" Type="Export Event" Headline="getProperty en la Link Seleccionar Fecha" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:02 CLT" Type="Export Event" Headline="getProperty en la Link Seleccionar Fecha" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:02 CLT" Type="Export Event" Headline="getProperty en la Link Seleccionar Fecha" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:02 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:linkCancelarDis3" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:03 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:linkLimpiarVarPre" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:03 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:linkExportarId" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:03 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:itLink:0:linkDinamic" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:03 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:itLink:1:linkDinamic" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:04 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:reBusC:0:linkVisualizarProcesoFuente" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:04 CLT" Type="Export Event" Headline="getProperty en la Link idTmpB:reBusC:0:accionCompletarResultado" Result="PASS">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:04 CLT" Type="General" Headline="click en la Link idTmpB:reBusC:0:accionCompletarResultado" Result="FAIL">
+			<Property line_number="36"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:04 CLT" Type="General" Headline="Callscripts.PruebaObjetos.testMain tenía una excepción no controlada." Result="FAIL">
+			<Property exception_name="java.lang.ClassCastException"/>
+			<Property exception_message="com.rational.test.ft.object.interfaces.RootTestObject incompatible with com.rational.test.ft.object.interfaces.GuiTestObject"/>
+			<Property script_name="Callscripts.PruebaObjetos"/>
+			<Property script_id="Callscripts.PruebaObjetos.java"/>
+			<Property line_number="36"/>
+			<Property exception_stack="	at LIB.Libreria.ClicLink(Libreria.java:150)
+	at Callscripts.PruebaObjetos.testMain(PruebaObjetos.java:36)
+	at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethodWithException(EclipseAppContainer.java:587)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:198)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:369)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:620)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:575)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1408)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1384)
+	at org.eclipse.core.launcher.Main.main(Main.java:34)
+"/>
+		</Event>
+		<Event Timestamp="19 de agosto de 2014 12:38:04 CLT" Type="Script End" Headline="Final de script [Callscripts.PruebaObjetos]" Result="FAIL">
+			<Property script_name="Callscripts.PruebaObjetos"/>
+			<Property script_id="Callscripts.PruebaObjetos.java"/>
+		</Event>
+	</Event>
+</TestLog>

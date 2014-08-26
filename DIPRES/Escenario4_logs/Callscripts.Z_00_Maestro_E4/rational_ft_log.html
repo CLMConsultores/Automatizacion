@@ -1,0 +1,1818 @@
+<HTML xmlns:xalan="http://xml.apache.org/xslt">
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="../Log_Assistive_Files/dojo.js" djConfig="parseOnLoad: true"></script>
+<link rel="stylesheet" type="text/css" href="../Log_Assistive_Files/log.css">
+<script type="text/javascript">
+		var dojoLocation = location.search;
+		
+		if(dojoLocation)
+		{	
+			dojoLocation = dojoLocation.substr(1);
+			dojoLocation = dojoLocation.replace(/\\/g,"/");
+			dojoLocation = "file:///" + dojoLocation;
+			var dojoRoot = dojoLocation.replace(/\/dojo\/dojo.js/,"");
+			var dojoDir = dojoRoot + "/dojo";
+			var dijitDir = dojoRoot + "/dijit";
+			var dojoxDir = dojoRoot + "/dojox";
+
+			dojo.registerModulePath("dojo",dojoDir);
+			dojo.registerModulePath("dijit",dijitDir);
+			dojo.registerModulePath("dojox",dojoxDir);	
+	
+			
+			var dojoCSS = dojo.moduleUrl("dojo","resources/dojo.css");
+			var stl1 = document.createElement("link");
+			stl1.type = "text/css";
+			stl1.rel="stylesheet";
+			stl1.href = dojoCSS.toString();
+
+			var tundraCSS= dojo.moduleUrl("dijit","themes/tundra/tundra.css");
+			var stl2 = document.createElement("link");
+			stl2.type = "text/css";
+			stl2.rel="stylesheet";
+			stl2.href = tundraCSS.toString();
+
+
+
+			document.getElementsByTagName("head")[0].appendChild(stl1);
+			document.getElementsByTagName("head")[0].appendChild(stl2);
+
+	
+			dojo.require("dijit.layout.AccordionContainer");
+			dojo.require("dijit.Tree");
+			dojo.require("dojo.data.ItemFileReadStore");
+			dojo.require("dijit.layout.SplitContainer");
+			dojo.require("dijit.layout.ContentPane");
+			dojo.require("dijit.layout.LayoutContainer");
+			dojo.require("dijit.layout.StackContainer");
+			dojo.require("dijit.TitlePane");
+			dojo.require("dojox.fx.scroll");
+			dojo.require("dojox.fx.easing");
+			dojo.require("dojo.data.ItemFileWriteStore");
+			dojo.require("dojox.fx");
+			dojo.require("dojox.charting.widget.Chart2D");			
+			dojo.require("dojox.charting.themes.PlotKit.blue");	
+			dojo.require("dijit.Toolbar");
+			dojo.require("dijit.form.Button");
+			dojo.require("dijit.form.CheckBox");
+
+			dojo.provide("rft.Tree");
+			dojo.declare("rft.Tree",[dijit.Tree],
+			{
+				onClick: function( item,  node)
+					{
+						if(item != null)
+						{
+							var idValue = this.store.getValue(item,"eventId");
+							if(isRoot(idValue))
+								idValue = idValue.substring(0, idValue.lastIndexOf("_root") );
+							updateDatapool(this.store,item);
+							var node = dojo.byId(idValue);
+							var nodeDim = dojo.coords(node);
+							var tg = { x: nodeDim.l, y: nodeDim.t };
+			
+							dojox.fx.smoothScroll({ node: node, win: dojo.byId("RightVerdictDetailPane"), target: tg, easing:dojox.fx.easing.easeOut , duration: 400}).play();
+							node.style.backgroundColor = "#FFFFFF";
+							dojox.fx.highlight({node:node, color:'#0066FF', duration:800}).play();
+							node.style.backgroundColor = "transparent";
+						}	
+						else
+						{
+							//This is the root node.
+						}
+					},
+					getIconClass: function(item)
+					{
+						if(item != null)
+						{							
+						var eventType = this.store.getValue(item,"Type");
+						var result = this.store.getValue(item,"Result");
+
+						if(eventType == "Simplified Script Group"){
+
+									if(result == "PASS") {
+									
+										return "ssGrpPassIcon";			
+									}else if(result == "FAIL"){
+
+										return "ssGrpFailIcon";			
+									}else if(result == "WARNING"){
+		
+										return "ssGrpWarnIcon";			
+									}else{
+										return "ssGrpPassIcon";
+									}
+						}
+						else if(eventType == "Script Start")
+							{
+								return "scriptStartIcon";
+							}
+							else if(eventType == "Verification Point")
+							{
+							if( result == "PASS")
+								return "vpPassIcon";			
+							else if(result == "FAIL")
+								return "vpFailIcon";
+							else if(result == "WARNING")
+								return "warningIcon";
+							else
+								return "informationIcon";
+							}
+							else
+							{
+								if( result == "PASS")
+									return "passIcon";			
+								else if(result == "FAIL")
+									return "failureIcon";
+								else if(result == "WARNING")
+									return "warningIcon";
+								else
+									return "informationIcon";
+							}		
+
+						}
+						else
+						{
+							return "verdictTreeIcon";								
+						}
+
+					},
+					
+					getLabelClass: function(item){
+						if(item != null)
+						{							
+						var eventType = this.store.getValue(item,"Type");
+						var result = this.store.getValue(item,"Result");
+
+						if(eventType == "Simplified Script Group"){
+
+									if(result == "PASS") {
+										return 'ssGrpPassClass';			
+									}else if(result == "FAIL"){
+
+										return 'ssGrpFailClass';			
+									}else if(result == "WARNING"){
+		
+										return 'ssGrpWarnClass';			
+									}else{
+										return 'ssGrpPassClass';
+									}
+						}
+						}							
+					},					
+					getItemChildren: function( parentItem,  onComplete)
+							 {
+								 if(parentItem == null)
+								 {
+									 this.store.fetch({query: this.query, onComplete: onComplete});
+								 }
+								 else
+								 {
+
+									 var childItems = [];
+										var temp1 = [];	
+										var temp = this.store.getValues(parentItem, this.childrenAttr[0]);
+										var j= 0;
+										var tempStore123 =this.store;
+										 dojo.forEach(temp,function(temp2){
+												 if(isItemNonFiltered(tempStore123,temp2))
+												 {
+												 temp1[j]=temp2;
+												 j= j +1;
+												 }
+												});
+									 childItems= childItems.concat(temp1);
+								 	onComplete(childItems);
+
+								 }
+							}
+
+
+						});
+			
+	var dpStore = {
+					identifier: 'dpId',
+					items: []
+					};	
+	var dpLogStore = new dojo.data.ItemFileWriteStore({data : dpStore});
+	
+				
+		dpLogStore.newItem({dpId: 'dp_Callscripts.Z_00_Maestro_E4_AbT0', dpUpdates: [	
+		]});			
+		dpLogStore.newItem({dpId: 'dp_Script.RP_GENERICO_01_AbT1', dpUpdates: [	
+		{CPosition : '1', dpVariable: 'Usuario' , dpValue: 'Usua_0908001' }
+		,{CPosition : '1', dpVariable: 'Password' , dpValue: 'usuario1234' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoContrato' , dpValue: 'E40000001' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra1' , dpValue: 'E40000002' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra2' , dpValue: 'E40000003' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra3' , dpValue: 'E40000004' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP1' , dpValue: '40000005' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP2' , dpValue: '40000006' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP1_1' , dpValue: '40000007' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP2_1' , dpValue: '40000008' }
+		,{CPosition : '1', dpVariable: 'TituloRP' , dpValue: 'RP_GENERICO_01' }
+		,{CPosition : '1', dpVariable: 'DescripcionRP' , dpValue: 'RP_GENERICO_01' }
+		,{CPosition : '1', dpVariable: 'TipoDemanda' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_1' , dpValue: '2403163' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_3' , dpValue: '2401231' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_4' , dpValue: '2401006' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_5' , dpValue: '2401221' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_1' , dpValue: '40201003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_2' , dpValue: '40401008' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_3' , dpValue: '40402006' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_4' , dpValue: '40402007' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_5' , dpValue: '41501003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_6' , dpValue: '41601001' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_7' , dpValue: '40404003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_8' , dpValue: '40404004' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_9' , dpValue: '40405001' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_10' , dpValue: '40405002' }
+		,{CPosition : '1', dpVariable: 'MontoRP_1' , dpValue: '150.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_2' , dpValue: '250.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_3' , dpValue: '300.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_4' , dpValue: '400.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_5' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_6' , dpValue: '300.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_7' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_8' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_9' , dpValue: '80.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_10' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_11' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_12' , dpValue: '100.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_13' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_14' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_15' , dpValue: '150.000' }
+		,{CPosition : '1', dpVariable: 'IDRP_GD' , dpValue: '77100034' }
+		,{CPosition : '1', dpVariable: 'IDRP_GEN' , dpValue: '77100034' }
+		,{CPosition : '1', dpVariable: 'RP_FOLIO_APR' , dpValue: '77100001' }
+		,{CPosition : '1', dpVariable: 'TituloCompromiso' , dpValue: 'CP_GENERICO_02' }
+		,{CPosition : '1', dpVariable: 'DescripcionCompromiso' , dpValue: 'CP_GENERICO_02' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoCP' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'ProcesoCP' , dpValue: 'Requerimiento Presupuestario' }
+		,{CPosition : '1', dpVariable: 'TipoDemandaCP' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'MonedaPresupuestaria' , dpValue: 'Nacional' }
+		,{CPosition : '1', dpVariable: 'DescripcionContrato' , dpValue: 'Contrato' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoContrato' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MonedaDocContrato' , dpValue: 'Peso Chileno' }
+		,{CPosition : '1', dpVariable: 'RutPrincipalContrato' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'IDCP_GD' , dpValue: '77100022' }
+		,{CPosition : '1', dpVariable: 'FechasCumplimientoCP' , dpValue: '30/04/2014' }
+		,{CPosition : '1', dpVariable: 'MontoTotalCP' , dpValue: '2.600.000' }
+		,{CPosition : '1', dpVariable: 'IDCP_GEN' , dpValue: '77100022' }
+		,{CPosition : '1', dpVariable: 'CP_FOLIO_APR' , dpValue: '77100001' }
+		,{CPosition : '1', dpVariable: 'TituloCompromiso2' , dpValue: 'CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'DescripcionCompromiso2' , dpValue: 'CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoCP2' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'ProcesoCP2' , dpValue: 'Compromiso Presupuestario' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra1' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MonedaDocOrdenCompra' , dpValue: 'Peso Chileno' }
+		,{CPosition : '1', dpVariable: 'MontoCP_1' , dpValue: '50.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_2' , dpValue: '50.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_3' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_4' , dpValue: '40.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_5' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_6' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_7' , dpValue: '12.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_8' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_9' , dpValue: '8.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_10' , dpValue: '3.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_11' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_12' , dpValue: '10.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_13' , dpValue: '12.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_14' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_15' , dpValue: '15.000' }
+		,{CPosition : '1', dpVariable: 'FechasCumplimientoOC' , dpValue: '30/04/2014' }
+		,{CPosition : '1', dpVariable: 'MontoTotalOC' , dpValue: '328.000' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra2' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra3' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra3' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'IDCP2_GD' , dpValue: '77100024' }
+		,{CPosition : '1', dpVariable: 'IDCP2_GEN' , dpValue: '77100024' }
+		,{CPosition : '1', dpVariable: 'CP2_FOLIO_APR' , dpValue: '77100002' }
+		,{CPosition : '1', dpVariable: 'TituloDP1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'DescripcionDP1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoDP1' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP' , dpValue: 'Factura Afecta' }
+		,{CPosition : '1', dpVariable: 'RutDP' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'ProcesoDP1' , dpValue: 'Compromiso Presupuestario' }
+		,{CPosition : '1', dpVariable: 'TipoDemandaDP1' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP1' , dpValue: '13.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_8' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_9' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_10' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_11' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_12' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_13' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_14' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_15' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaIngresoDP' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaEmisionDP' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesIdentificadorChileCompraDP' , dpValue: '999999999' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP1' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP2' , dpValue: 'Factura Afecta' }
+		,{CPosition : '1', dpVariable: 'RutDP2' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio2' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP2' , dpValue: '13.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaIngresoDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaEmisionDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesIdentificadorChileCompraDP2' , dpValue: '999999999' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_8' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_9' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_10' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_11' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_12' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_13' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_14' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_15' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP2' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'IDDP_GD' , dpValue: '606885' }
+		,{CPosition : '1', dpVariable: 'IDDP1_GEN' , dpValue: '675206' }
+		,{CPosition : '1', dpVariable: 'TituloDP2' , dpValue: 'DP_GENERICO_03_01' }
+		,{CPosition : '1', dpVariable: 'DescripcionDP2' , dpValue: 'DP_GENERICO_03_01' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoDP2' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP2_1' , dpValue: 'Factura Exenta' }
+		,{CPosition : '1', dpVariable: 'RutDP2_1' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio1_1' , dpValue: 'DP_GENERICO_03_1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP1_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP1_1' , dpValue: '3.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP1_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_2' , dpValue: '2406' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP2_1' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio2_1' , dpValue: 'DP_GENERICO_03_1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP2_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP2_1' , dpValue: '7.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP2_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'IDDP2_GD' , dpValue: '77000089' }
+		,{CPosition : '1', dpVariable: 'IDDP2_GEN' , dpValue: '77000089' }
+		,{CPosition : '1', dpVariable: 'ESTADO_DP1' , dpValue: 'Por Completar' }
+		,{CPosition : '1', dpVariable: 'ProcesoFuenteDP1' , dpValue: 'Devengo' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC1' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC1' , dpValue: '4011' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC1' , dpValue: '4760' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC1' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC2' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC2' , dpValue: '4012' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC2' , dpValue: '2.380' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC2' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'IDAC1_GEN' , dpValue: '1075762' }
+		,{CPosition : '1', dpVariable: 'AC1_FOLIO_APR' , dpValue: '653' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC3' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC3' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC3' , dpValue: '4013' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC3' , dpValue: '2000' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC3' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC4' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC4' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC4' , dpValue: '4014' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC4' , dpValue: '1000' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC4' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'IDAC2_GEN' , dpValue: '1075763' }
+		,{CPosition : '1', dpVariable: 'AC2_FOLIO_APR' , dpValue: '654' }
+		,{CPosition : '1', dpVariable: 'TituloPT1' , dpValue: 'PT_GENERICO_05' }
+		,{CPosition : '1', dpVariable: 'DescripcionPT1' , dpValue: 'PT_GENERICO_05' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT1' , dpValue: 'Cheque Manual' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT2' , dpValue: 'Transferencia Electrónica de Fondos' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT3' , dpValue: 'Transferencia Electrónica de Fondos' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT4' , dpValue: 'Cheque Automático' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT5' , dpValue: 'Cheque Automático' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT6' , dpValue: 'Cheque Manual' }
+		,{CPosition : '1', dpVariable: 'IDTE_GD' , dpValue: '1754319' }
+		,{CPosition : '1', dpVariable: 'IDTE_GEN' , dpValue: '1754319' }
+		,{CPosition : '1', dpVariable: 'IDDP1_GD' , dpValue: '12' }
+		,{CPosition : '1', dpVariable: 'ProcesoFuentePT' , dpValue: 'Tesorería' }
+		,{CPosition : '1', dpVariable: 'EstadoPT' , dpValue: 'Generado' }
+		,{CPosition : '1', dpVariable: 'IDTE_FOLIO_APR' , dpValue: '655' }
+		]});			
+		dpLogStore.newItem({dpId: 'dp_Script.CO_GENERICO_04_AbT2', dpUpdates: [	
+		{CPosition : '1', dpVariable: 'Usuario' , dpValue: 'Usua_0908001' }
+		,{CPosition : '1', dpVariable: 'Password' , dpValue: 'usuario1234' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoContrato' , dpValue: 'E40000001' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra1' , dpValue: 'E40000002' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra2' , dpValue: 'E40000003' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra3' , dpValue: 'E40000004' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP1' , dpValue: '40000005' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP2' , dpValue: '40000006' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP1_1' , dpValue: '40000007' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP2_1' , dpValue: '40000008' }
+		,{CPosition : '1', dpVariable: 'TituloRP' , dpValue: 'RP_GENERICO_01' }
+		,{CPosition : '1', dpVariable: 'DescripcionRP' , dpValue: 'RP_GENERICO_01' }
+		,{CPosition : '1', dpVariable: 'TipoDemanda' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_1' , dpValue: '2403163' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_3' , dpValue: '2401231' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_4' , dpValue: '2401006' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_5' , dpValue: '2401221' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_1' , dpValue: '40201003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_2' , dpValue: '40401008' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_3' , dpValue: '40402006' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_4' , dpValue: '40402007' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_5' , dpValue: '41501003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_6' , dpValue: '41601001' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_7' , dpValue: '40404003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_8' , dpValue: '40404004' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_9' , dpValue: '40405001' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_10' , dpValue: '40405002' }
+		,{CPosition : '1', dpVariable: 'MontoRP_1' , dpValue: '150.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_2' , dpValue: '250.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_3' , dpValue: '300.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_4' , dpValue: '400.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_5' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_6' , dpValue: '300.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_7' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_8' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_9' , dpValue: '80.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_10' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_11' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_12' , dpValue: '100.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_13' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_14' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_15' , dpValue: '150.000' }
+		,{CPosition : '1', dpVariable: 'IDRP_GD' , dpValue: '77100034' }
+		,{CPosition : '1', dpVariable: 'IDRP_GEN' , dpValue: '77100034' }
+		,{CPosition : '1', dpVariable: 'RP_FOLIO_APR' , dpValue: '77100001' }
+		,{CPosition : '1', dpVariable: 'TituloCompromiso' , dpValue: 'CP_GENERICO_02' }
+		,{CPosition : '1', dpVariable: 'DescripcionCompromiso' , dpValue: 'CP_GENERICO_02' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoCP' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'ProcesoCP' , dpValue: 'Requerimiento Presupuestario' }
+		,{CPosition : '1', dpVariable: 'TipoDemandaCP' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'MonedaPresupuestaria' , dpValue: 'Nacional' }
+		,{CPosition : '1', dpVariable: 'DescripcionContrato' , dpValue: 'Contrato' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoContrato' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MonedaDocContrato' , dpValue: 'Peso Chileno' }
+		,{CPosition : '1', dpVariable: 'RutPrincipalContrato' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'IDCP_GD' , dpValue: '77100022' }
+		,{CPosition : '1', dpVariable: 'FechasCumplimientoCP' , dpValue: '30/04/2014' }
+		,{CPosition : '1', dpVariable: 'MontoTotalCP' , dpValue: '2.600.000' }
+		,{CPosition : '1', dpVariable: 'IDCP_GEN' , dpValue: '77100022' }
+		,{CPosition : '1', dpVariable: 'CP_FOLIO_APR' , dpValue: '77100001' }
+		,{CPosition : '1', dpVariable: 'TituloCompromiso2' , dpValue: 'CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'DescripcionCompromiso2' , dpValue: 'CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoCP2' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'ProcesoCP2' , dpValue: 'Compromiso Presupuestario' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra1' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MonedaDocOrdenCompra' , dpValue: 'Peso Chileno' }
+		,{CPosition : '1', dpVariable: 'MontoCP_1' , dpValue: '50.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_2' , dpValue: '50.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_3' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_4' , dpValue: '40.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_5' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_6' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_7' , dpValue: '12.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_8' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_9' , dpValue: '8.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_10' , dpValue: '3.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_11' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_12' , dpValue: '10.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_13' , dpValue: '12.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_14' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_15' , dpValue: '15.000' }
+		,{CPosition : '1', dpVariable: 'FechasCumplimientoOC' , dpValue: '30/04/2014' }
+		,{CPosition : '1', dpVariable: 'MontoTotalOC' , dpValue: '328.000' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra2' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra3' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra3' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'IDCP2_GD' , dpValue: '77100024' }
+		,{CPosition : '1', dpVariable: 'IDCP2_GEN' , dpValue: '77100024' }
+		,{CPosition : '1', dpVariable: 'CP2_FOLIO_APR' , dpValue: '77100002' }
+		,{CPosition : '1', dpVariable: 'TituloDP1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'DescripcionDP1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoDP1' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP' , dpValue: 'Factura Afecta' }
+		,{CPosition : '1', dpVariable: 'RutDP' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'ProcesoDP1' , dpValue: 'Compromiso Presupuestario' }
+		,{CPosition : '1', dpVariable: 'TipoDemandaDP1' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP1' , dpValue: '13.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_8' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_9' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_10' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_11' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_12' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_13' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_14' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_15' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaIngresoDP' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaEmisionDP' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesIdentificadorChileCompraDP' , dpValue: '999999999' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP1' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP2' , dpValue: 'Factura Afecta' }
+		,{CPosition : '1', dpVariable: 'RutDP2' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio2' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP2' , dpValue: '13.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaIngresoDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaEmisionDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesIdentificadorChileCompraDP2' , dpValue: '999999999' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_8' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_9' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_10' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_11' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_12' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_13' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_14' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_15' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP2' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'IDDP_GD' , dpValue: '606885' }
+		,{CPosition : '1', dpVariable: 'IDDP1_GEN' , dpValue: '675206' }
+		,{CPosition : '1', dpVariable: 'TituloDP2' , dpValue: 'DP_GENERICO_03_01' }
+		,{CPosition : '1', dpVariable: 'DescripcionDP2' , dpValue: 'DP_GENERICO_03_01' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoDP2' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP2_1' , dpValue: 'Factura Exenta' }
+		,{CPosition : '1', dpVariable: 'RutDP2_1' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio1_1' , dpValue: 'DP_GENERICO_03_1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP1_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP1_1' , dpValue: '3.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP1_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_2' , dpValue: '2406' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP2_1' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio2_1' , dpValue: 'DP_GENERICO_03_1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP2_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP2_1' , dpValue: '7.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP2_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'IDDP2_GD' , dpValue: '77000089' }
+		,{CPosition : '1', dpVariable: 'IDDP2_GEN' , dpValue: '77000089' }
+		,{CPosition : '1', dpVariable: 'ESTADO_DP1' , dpValue: 'Por Completar' }
+		,{CPosition : '1', dpVariable: 'ProcesoFuenteDP1' , dpValue: 'Devengo' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC1' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC1' , dpValue: '4011' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC1' , dpValue: '4760' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC1' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC2' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC2' , dpValue: '4012' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC2' , dpValue: '2.380' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC2' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'IDAC1_GEN' , dpValue: '1075762' }
+		,{CPosition : '1', dpVariable: 'AC1_FOLIO_APR' , dpValue: '653' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC3' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC3' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC3' , dpValue: '4013' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC3' , dpValue: '2000' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC3' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC4' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC4' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC4' , dpValue: '4014' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC4' , dpValue: '1000' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC4' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'IDAC2_GEN' , dpValue: '1075763' }
+		,{CPosition : '1', dpVariable: 'AC2_FOLIO_APR' , dpValue: '654' }
+		,{CPosition : '1', dpVariable: 'TituloPT1' , dpValue: 'PT_GENERICO_05' }
+		,{CPosition : '1', dpVariable: 'DescripcionPT1' , dpValue: 'PT_GENERICO_05' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT1' , dpValue: 'Cheque Manual' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT2' , dpValue: 'Transferencia Electrónica de Fondos' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT3' , dpValue: 'Transferencia Electrónica de Fondos' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT4' , dpValue: 'Cheque Automático' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT5' , dpValue: 'Cheque Automático' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT6' , dpValue: 'Cheque Manual' }
+		,{CPosition : '1', dpVariable: 'IDTE_GD' , dpValue: '1754319' }
+		,{CPosition : '1', dpVariable: 'IDTE_GEN' , dpValue: '1754319' }
+		,{CPosition : '1', dpVariable: 'IDDP1_GD' , dpValue: '12' }
+		,{CPosition : '1', dpVariable: 'ProcesoFuentePT' , dpValue: 'Tesorería' }
+		,{CPosition : '1', dpVariable: 'EstadoPT' , dpValue: 'Generado' }
+		,{CPosition : '1', dpVariable: 'IDTE_FOLIO_APR' , dpValue: '655' }
+		]});			
+		dpLogStore.newItem({dpId: 'dp_Script.CO_GENERICO_04_AbT3', dpUpdates: [	
+		{CPosition : '1', dpVariable: 'Usuario' , dpValue: 'Usua_0908001' }
+		,{CPosition : '1', dpVariable: 'Password' , dpValue: 'usuario1234' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoContrato' , dpValue: 'E40000001' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra1' , dpValue: 'E40000002' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra2' , dpValue: 'E40000003' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoOrdenCompra3' , dpValue: 'E40000004' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP1' , dpValue: '40000005' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP2' , dpValue: '40000006' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP1_1' , dpValue: '40000007' }
+		,{CPosition : '1', dpVariable: 'NumeroDocumentoDP2_1' , dpValue: '40000008' }
+		,{CPosition : '1', dpVariable: 'TituloRP' , dpValue: 'RP_GENERICO_01' }
+		,{CPosition : '1', dpVariable: 'DescripcionRP' , dpValue: 'RP_GENERICO_01' }
+		,{CPosition : '1', dpVariable: 'TipoDemanda' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_1' , dpValue: '2403163' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_3' , dpValue: '2401231' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_4' , dpValue: '2401006' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_5' , dpValue: '2401221' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_1' , dpValue: '40201003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_2' , dpValue: '40401008' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_3' , dpValue: '40402006' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_4' , dpValue: '40402007' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_5' , dpValue: '41501003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_6' , dpValue: '41601001' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_7' , dpValue: '40404003' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_8' , dpValue: '40404004' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_9' , dpValue: '40405001' }
+		,{CPosition : '1', dpVariable: 'InsumoRP_10' , dpValue: '40405002' }
+		,{CPosition : '1', dpVariable: 'MontoRP_1' , dpValue: '150.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_2' , dpValue: '250.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_3' , dpValue: '300.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_4' , dpValue: '400.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_5' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_6' , dpValue: '300.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_7' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_8' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_9' , dpValue: '80.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_10' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_11' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_12' , dpValue: '100.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_13' , dpValue: '120.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_14' , dpValue: '200.000' }
+		,{CPosition : '1', dpVariable: 'MontoRP_15' , dpValue: '150.000' }
+		,{CPosition : '1', dpVariable: 'IDRP_GD' , dpValue: '77100034' }
+		,{CPosition : '1', dpVariable: 'IDRP_GEN' , dpValue: '77100034' }
+		,{CPosition : '1', dpVariable: 'RP_FOLIO_APR' , dpValue: '77100001' }
+		,{CPosition : '1', dpVariable: 'TituloCompromiso' , dpValue: 'CP_GENERICO_02' }
+		,{CPosition : '1', dpVariable: 'DescripcionCompromiso' , dpValue: 'CP_GENERICO_02' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoCP' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'ProcesoCP' , dpValue: 'Requerimiento Presupuestario' }
+		,{CPosition : '1', dpVariable: 'TipoDemandaCP' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'MonedaPresupuestaria' , dpValue: 'Nacional' }
+		,{CPosition : '1', dpVariable: 'DescripcionContrato' , dpValue: 'Contrato' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoContrato' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MonedaDocContrato' , dpValue: 'Peso Chileno' }
+		,{CPosition : '1', dpVariable: 'RutPrincipalContrato' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'IDCP_GD' , dpValue: '77100022' }
+		,{CPosition : '1', dpVariable: 'FechasCumplimientoCP' , dpValue: '30/04/2014' }
+		,{CPosition : '1', dpVariable: 'MontoTotalCP' , dpValue: '2.600.000' }
+		,{CPosition : '1', dpVariable: 'IDCP_GEN' , dpValue: '77100022' }
+		,{CPosition : '1', dpVariable: 'CP_FOLIO_APR' , dpValue: '77100001' }
+		,{CPosition : '1', dpVariable: 'TituloCompromiso2' , dpValue: 'CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'DescripcionCompromiso2' , dpValue: 'CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoCP2' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'ProcesoCP2' , dpValue: 'Compromiso Presupuestario' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra1' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MonedaDocOrdenCompra' , dpValue: 'Peso Chileno' }
+		,{CPosition : '1', dpVariable: 'MontoCP_1' , dpValue: '50.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_2' , dpValue: '50.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_3' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_4' , dpValue: '40.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_5' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_6' , dpValue: '30.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_7' , dpValue: '12.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_8' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_9' , dpValue: '8.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_10' , dpValue: '3.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_11' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_12' , dpValue: '10.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_13' , dpValue: '12.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_14' , dpValue: '20.000' }
+		,{CPosition : '1', dpVariable: 'MontoCP_15' , dpValue: '15.000' }
+		,{CPosition : '1', dpVariable: 'FechasCumplimientoOC' , dpValue: '30/04/2014' }
+		,{CPosition : '1', dpVariable: 'MontoTotalOC' , dpValue: '328.000' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra2' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'DescripcionOrdenCompra3' , dpValue: 'Orden de Compra - CP_GENERICO_2.1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoOrdenCompra3' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'IDCP2_GD' , dpValue: '77100024' }
+		,{CPosition : '1', dpVariable: 'IDCP2_GEN' , dpValue: '77100024' }
+		,{CPosition : '1', dpVariable: 'CP2_FOLIO_APR' , dpValue: '77100002' }
+		,{CPosition : '1', dpVariable: 'TituloDP1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'DescripcionDP1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoDP1' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP' , dpValue: 'Factura Afecta' }
+		,{CPosition : '1', dpVariable: 'RutDP' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'ProcesoDP1' , dpValue: 'Compromiso Presupuestario' }
+		,{CPosition : '1', dpVariable: 'TipoDemandaDP1' , dpValue: 'Ley de Presupuestos' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio1' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP1' , dpValue: '13.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_8' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_9' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_10' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_11' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_12' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_13' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_14' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP1_15' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaIngresoDP' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaEmisionDP' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesIdentificadorChileCompraDP' , dpValue: '999999999' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP1' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP2' , dpValue: 'Factura Afecta' }
+		,{CPosition : '1', dpVariable: 'RutDP2' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio2' , dpValue: 'DP_GENERICO_03' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP2' , dpValue: '13.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaIngresoDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesFechaEmisionDP2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'CamposVariablesIdentificadorChileCompraDP2' , dpValue: '999999999' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_8' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_9' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_10' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_11' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_12' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_13' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_14' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoDP2_15' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP2' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'IDDP_GD' , dpValue: '606885' }
+		,{CPosition : '1', dpVariable: 'IDDP1_GEN' , dpValue: '675206' }
+		,{CPosition : '1', dpVariable: 'TituloDP2' , dpValue: 'DP_GENERICO_03_01' }
+		,{CPosition : '1', dpVariable: 'DescripcionDP2' , dpValue: 'DP_GENERICO_03_01' }
+		,{CPosition : '1', dpVariable: 'TipoPresupuestoDP2' , dpValue: 'Gasto' }
+		,{CPosition : '1', dpVariable: 'TipoDocumentoDP2_1' , dpValue: 'Factura Exenta' }
+		,{CPosition : '1', dpVariable: 'RutDP2_1' , dpValue: '88683400-4' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio1_1' , dpValue: 'DP_GENERICO_03_1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP1_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP1_1' , dpValue: '3.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP1_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP1_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'ConceptoPresup_2' , dpValue: '2406' }
+		,{CPosition : '1', dpVariable: 'FechaCumplimientoDP2_1' , dpValue: '31/12/2014' }
+		,{CPosition : '1', dpVariable: 'DescripcionDocumentoNegocio2_1' , dpValue: 'DP_GENERICO_03_1' }
+		,{CPosition : '1', dpVariable: 'FechaDocumentoDP2_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'NetoMontoDP2_1' , dpValue: '7.000' }
+		,{CPosition : '1', dpVariable: 'FechaRecepcionConformeDP2_1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_1' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_2' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_3' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_4' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_5' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_6' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'MontoInsumoDP2_7' , dpValue: '1.000' }
+		,{CPosition : '1', dpVariable: 'IDDP2_GD' , dpValue: '77000089' }
+		,{CPosition : '1', dpVariable: 'IDDP2_GEN' , dpValue: '77000089' }
+		,{CPosition : '1', dpVariable: 'ESTADO_DP1' , dpValue: 'Por Completar' }
+		,{CPosition : '1', dpVariable: 'ProcesoFuenteDP1' , dpValue: 'Devengo' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC1' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC1' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC1' , dpValue: '4011' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC1' , dpValue: '4760' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC1' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC2' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC2' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC2' , dpValue: '4012' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC2' , dpValue: '2.380' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC2' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'IDAC1_GEN' , dpValue: '1075762' }
+		,{CPosition : '1', dpVariable: 'AC1_FOLIO_APR' , dpValue: '653' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC3' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC3' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC3' , dpValue: '4013' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC3' , dpValue: '2000' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC3' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'FechaDocAC4' , dpValue: '31/01/2014' }
+		,{CPosition : '1', dpVariable: 'TipoDocAC4' , dpValue: 'Otro' }
+		,{CPosition : '1', dpVariable: 'NumeroDocAC4' , dpValue: '4014' }
+		,{CPosition : '1', dpVariable: 'MontoOrigenAC4' , dpValue: '1000' }
+		,{CPosition : '1', dpVariable: 'DescripcionAC4' , dpValue: 'DEMO' }
+		,{CPosition : '1', dpVariable: 'IDAC2_GEN' , dpValue: '1075763' }
+		,{CPosition : '1', dpVariable: 'AC2_FOLIO_APR' , dpValue: '654' }
+		,{CPosition : '1', dpVariable: 'TituloPT1' , dpValue: 'PT_GENERICO_05' }
+		,{CPosition : '1', dpVariable: 'DescripcionPT1' , dpValue: 'PT_GENERICO_05' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT1' , dpValue: 'Cheque Manual' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT2' , dpValue: 'Transferencia Electrónica de Fondos' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT3' , dpValue: 'Transferencia Electrónica de Fondos' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT4' , dpValue: 'Cheque Automático' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT5' , dpValue: 'Cheque Automático' }
+		,{CPosition : '1', dpVariable: 'MedioPagoPT6' , dpValue: 'Cheque Manual' }
+		,{CPosition : '1', dpVariable: 'IDTE_GD' , dpValue: '1754319' }
+		,{CPosition : '1', dpVariable: 'IDTE_GEN' , dpValue: '1754319' }
+		,{CPosition : '1', dpVariable: 'IDDP1_GD' , dpValue: '12' }
+		,{CPosition : '1', dpVariable: 'ProcesoFuentePT' , dpValue: 'Tesorería' }
+		,{CPosition : '1', dpVariable: 'EstadoPT' , dpValue: 'Generado' }
+		,{CPosition : '1', dpVariable: 'IDTE_FOLIO_APR' , dpValue: '655' }
+		]});
+
+	var logStore = {
+						identifier: 'eventId',
+						label: 'Headline',
+						items: [
+						{ eventType: 'rftevent', eventId: 'event_Callscripts.Z_00_Maestro_E4_AbT0_root', TimeStamp: '19 de agosto de 2014 12:29:55 CLT' ,Headline: 'Inicio de script [Callscripts.Z_00_Maestro_E4]', Type: 'Script Start', Result: 'INFORMATION', Position: '1', ParentId: 'event_Callscripts.Z_00_Maestro_E4_AbT0_root', events: [
+	{ eventType: 'rftevent', eventId: 'event_Callscripts.Z_00_Maestro_E4_AbT0', TimeStamp: '19 de agosto de 2014 12:29:55 CLT' ,Headline: 'Inicio de script [Callscripts.Z_00_Maestro_E4]', Type: 'Script Start', Result: 'INFORMATION', Position: '1', ParentId: 'event_Callscripts.Z_00_Maestro_E4_AbT0_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Callscripts.Z_00_Maestro_E4_AbT4', TimeStamp: '19 de agosto de 2014 12:29:55 CLT' ,Headline: 'Invocar script [Script.RP_GENERICO_01]', Type: 'Call Script', Result: 'INFORMATION', Position: '2', ParentId: 'event_Callscripts.Z_00_Maestro_E4_AbT0_root' ,events: [{ eventType: 'rftevent', eventId: 'event_Script.RP_GENERICO_01_AbT1_root', TimeStamp: '19 de agosto de 2014 12:29:55 CLT' ,Headline: 'Inicio de script [Script.RP_GENERICO_01]', Type: 'Script Start', Result: 'INFORMATION', Position: '1', ParentId: 'event_Script.RP_GENERICO_01_AbT1_root', events: [
+	{ eventType: 'rftevent', eventId: 'event_Script.RP_GENERICO_01_AbT1', TimeStamp: '19 de agosto de 2014 12:29:55 CLT' ,Headline: 'Inicio de script [Script.RP_GENERICO_01]', Type: 'Script Start', Result: 'INFORMATION', Position: '1', ParentId: 'event_Script.RP_GENERICO_01_AbT1_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.RP_GENERICO_01_AbT5', TimeStamp: '19 de agosto de 2014 12:30:00 CLT' ,Headline: 'Iniciar aplicación [T01]', Type: 'Application Start', Result: 'INFORMATION', Position: '2', ParentId: 'event_Script.RP_GENERICO_01_AbT1_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.RP_GENERICO_01_AbT6', TimeStamp: '19 de agosto de 2014 12:30:05 CLT' ,Headline: 'setText en la Text text_j_username', Type: 'General', Result: 'PASS', Position: '3', ParentId: 'event_Script.RP_GENERICO_01_AbT1_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.RP_GENERICO_01_AbT7', TimeStamp: '19 de agosto de 2014 12:30:07 CLT' ,Headline: 'setText en la Text text_j_password', Type: 'General', Result: 'PASS', Position: '4', ParentId: 'event_Script.RP_GENERICO_01_AbT1_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.RP_GENERICO_01_AbT8', TimeStamp: '19 de agosto de 2014 12:30:07 CLT' ,Headline: 'click en la Button button_ingresarsubmit', Type: 'General', Result: 'PASS', Position: '5', ParentId: 'event_Script.RP_GENERICO_01_AbT1_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.RP_GENERICO_01_AbT9', TimeStamp: '19 de agosto de 2014 12:30:07 CLT' ,Headline: 'Final de script [Script.RP_GENERICO_01]', Type: 'Script End', Result: 'PASS', Position: '6', ParentId: 'event_Script.RP_GENERICO_01_AbT1_root'}	
+	]}]}	
+	,{ eventType: 'rftevent', eventId: 'event_Callscripts.Z_00_Maestro_E4_AbT10', TimeStamp: '19 de agosto de 2014 12:30:07 CLT' ,Headline: 'Invocar script [Script.CO_GENERICO_04]', Type: 'Call Script', Result: 'INFORMATION', Position: '3', ParentId: 'event_Callscripts.Z_00_Maestro_E4_AbT0_root' ,events: [{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT2_root', TimeStamp: '19 de agosto de 2014 12:30:07 CLT' ,Headline: 'Inicio de script [Script.CO_GENERICO_04]', Type: 'Script Start', Result: 'INFORMATION', Position: '1', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root', events: [
+	{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT2', TimeStamp: '19 de agosto de 2014 12:30:07 CLT' ,Headline: 'Inicio de script [Script.CO_GENERICO_04]', Type: 'Script Start', Result: 'INFORMATION', Position: '1', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT11', TimeStamp: '19 de agosto de 2014 12:30:11 CLT' ,Headline: 'click en la Link link_contabilidad', Type: 'General', Result: 'PASS', Position: '2', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT12', TimeStamp: '19 de agosto de 2014 12:30:11 CLT' ,Headline: 'click en la Table table_idPgTplJ_id66Menu', Type: 'General', Result: 'PASS', Position: '3', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT13', TimeStamp: '19 de agosto de 2014 12:30:20 CLT' ,Headline: 'select en la List list_seleccione', Type: 'General', Result: 'PASS', Position: '4', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT14', TimeStamp: '19 de agosto de 2014 12:30:21 CLT' ,Headline: 'select en la List list_seleccione2', Type: 'General', Result: 'PASS', Position: '5', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT15', TimeStamp: '19 de agosto de 2014 12:30:24 CLT' ,Headline: 'click en la Button button_buscarsubmit2', Type: 'General', Result: 'PASS', Position: '6', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT16', TimeStamp: '19 de agosto de 2014 12:30:28 CLT' ,Headline: 'click en la Table table_htmlTable_0', Type: 'General', Result: 'PASS', Position: '7', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT17', TimeStamp: '19 de agosto de 2014 12:30:28 CLT' ,Headline: 'inputKeys en la Browser browser_htmlBrowser', Type: 'General', Result: 'PASS', Position: '8', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT18', TimeStamp: '19 de agosto de 2014 12:30:29 CLT' ,Headline: 'inputKeys en la Browser browser_htmlBrowser', Type: 'General', Result: 'PASS', Position: '9', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT19', TimeStamp: '19 de agosto de 2014 12:30:32 CLT' ,Headline: 'Final de script [Script.CO_GENERICO_04]', Type: 'Script End', Result: 'PASS', Position: '10', ParentId: 'event_Script.CO_GENERICO_04_AbT2_root'}	
+	]}]}	
+	,{ eventType: 'rftevent', eventId: 'event_Callscripts.Z_00_Maestro_E4_AbT20', TimeStamp: '19 de agosto de 2014 12:30:32 CLT' ,Headline: 'Invocar script [Script.CO_GENERICO_04]', Type: 'Call Script', Result: 'INFORMATION', Position: '4', ParentId: 'event_Callscripts.Z_00_Maestro_E4_AbT0_root' ,events: [{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT3_root', TimeStamp: '19 de agosto de 2014 12:30:32 CLT' ,Headline: 'Inicio de script [Script.CO_GENERICO_04]', Type: 'Script Start', Result: 'INFORMATION', Position: '1', ParentId: 'event_Script.CO_GENERICO_04_AbT3_root', events: [
+	{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT3', TimeStamp: '19 de agosto de 2014 12:30:32 CLT' ,Headline: 'Inicio de script [Script.CO_GENERICO_04]', Type: 'Script Start', Result: 'INFORMATION', Position: '1', ParentId: 'event_Script.CO_GENERICO_04_AbT3_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT21', TimeStamp: '19 de agosto de 2014 12:31:11 CLT' ,Headline: 'click en la Link link_idPgTplItAgrp0SgfCmbCuent', Type: 'General', Result: 'PASS', Position: '2', ParentId: 'event_Script.CO_GENERICO_04_AbT3_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT22', TimeStamp: '19 de agosto de 2014 12:31:11 CLT' ,Headline: 'CRFCN0596E: El usuario de Script.CO_GENERICO_04.EliminarDatos solicitó una conclusión de script [Script.CO_GENERICO_04].', Type: 'General', Result: 'FAIL', Position: '3', ParentId: 'event_Script.CO_GENERICO_04_AbT3_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Script.CO_GENERICO_04_AbT23', TimeStamp: '19 de agosto de 2014 12:31:11 CLT' ,Headline: 'Final de script [Script.CO_GENERICO_04]', Type: 'Script End', Result: 'FAIL', Position: '4', ParentId: 'event_Script.CO_GENERICO_04_AbT3_root'}	
+	]}]}	
+	,{ eventType: 'rftevent', eventId: 'event_Callscripts.Z_00_Maestro_E4_AbT24', TimeStamp: '19 de agosto de 2014 12:31:11 CLT' ,Headline: 'CRFCN0647E: Callscripts.Z_00_Maestro_E4.testMain tenía un error no controlado en el script invocado [Script.CO_GENERICO_04].', Type: 'General', Result: 'FAIL', Position: '5', ParentId: 'event_Callscripts.Z_00_Maestro_E4_AbT0_root'}	
+	,{ eventType: 'rftevent', eventId: 'event_Callscripts.Z_00_Maestro_E4_AbT25', TimeStamp: '19 de agosto de 2014 12:31:11 CLT' ,Headline: 'Final de script [Callscripts.Z_00_Maestro_E4]', Type: 'Script End', Result: 'FAIL', Position: '6', ParentId: 'event_Callscripts.Z_00_Maestro_E4_AbT0_root'}	
+	]}
+						
+						
+						]};
+	
+	
+	var tempStore = {identifier: 'eventId', label: 'Headline', items: []};
+	var temp1Store = {identifier: 'eventId', label: 'Headline', items: []};
+	var temp2Store = {identifier: 'eventId', label: 'Headline', items: []};
+	
+	var failedVerdictStore = new dojo.data.ItemFileWriteStore({data : tempStore});
+	var warningVerdictStore = new dojo.data.ItemFileWriteStore({data : temp1Store});
+	var verificationPointStore = new dojo.data.ItemFileWriteStore({data : temp2Store});
+	
+	var verdictSuccess = 0;
+	var verdictFailures = 0;
+	var verdictWarnings = 0;
+	var verdictMessages = 0;
+	
+	var verdictVPSuccess = 0;
+	var verdictVPFailures = 0;
+	
+	function getRFTEventType(item)
+	{
+		return continentStore.getValue(item,"eventType");
+	}
+	function getEventID(item)
+	{
+		return continentStore.getValue(item,"eventId");
+	}
+
+	function getEventTimeStamp(item)
+	{
+		return continentStore.getValue(item,"TimeStamp");
+	}
+
+	function getEventHeadline(item)
+	{
+		return continentStore.getValue(item,"Headline");
+	}
+	function getEventType(item)
+	{
+		return continentStore.getValue(item,"Type");
+	}
+	function getEventResult(item)
+	{
+		return continentStore.getValue(item,"Result");
+	}
+	function getEventParentId(item)
+	{
+		return continentStore.getValue(item,"ParentId");
+	}
+	function getEventPosition(item)
+	{
+			return continentStore.getValue(item,"Position");
+	}
+
+	function populateFailures(item)
+	{
+		failedVerdictStore.newItem({eventType: getRFTEventType(item), eventId: getEventID(item), TimeStamp: getEventTimeStamp(item), Headline: getEventHeadline(item), Type: getEventType(item), Result: getEventResult(item), Position: getEventPosition(item), ParentId: getEventParentId(item) });
+		verdictFailures = verdictFailures + 1;
+	}
+
+	function populateWarnings(item)
+	{
+		warningVerdictStore.newItem({eventType: getRFTEventType(item), eventId: getEventID(item), TimeStamp: getEventTimeStamp(item), Headline: getEventHeadline(item), Type: getEventType(item), Result: getEventResult(item), Position: getEventPosition(item), ParentId: getEventParentId(item) });
+		verdictWarnings = verdictWarnings  + 1;
+	}
+
+	function populateSuccess(item)
+	{
+		verdictSuccess = verdictSuccess + 1;	
+	}
+	
+	function populateInformation(item)
+	{
+		verdictMessages = verdictMessages + 1;
+	}
+	
+	function populateVerificationPoints(item)
+	{
+		var verdict =  getEventResult(item);
+		verificationPointStore.newItem({eventType: getRFTEventType(item), eventId: getEventID(item), TimeStamp: getEventTimeStamp(item), Headline: getEventHeadline(item), Type: getEventType(item), Result: getEventResult(item), Position: getEventPosition(item), ParentId: getEventParentId(item) });
+		if(verdict == "PASS")
+		{
+			verdictVPSuccess = verdictVPSuccess + 1;
+		}else if(verdict == "FAIL")
+		{
+			verdictVPFailures = verdictVPFailures + 1;
+		}
+	}
+
+	function routeItems(item)
+	{
+		if(item != null && !isRoot( getEventID(item) ) )
+		{
+			var verdict = getEventResult(item);
+				
+			if(verdict == "FAIL")
+			{
+				populateFailures(item);
+			}
+			else if(verdict == "WARNING")
+			{
+				populateWarnings(item);
+			}
+			else if(verdict == "PASS")
+			{
+				populateSuccess(item);
+			}
+			else if(verdict == "INFORMATION")
+			{
+				populateInformation(item);
+			}
+			var verificationPoint = getEventType(item);
+			if(verificationPoint == "Verification Point")
+			{
+				populateVerificationPoints(item);
+			}
+		}	
+	}
+function failed(error)
+{
+	alert(error);
+}
+
+function isRoot(idValue)
+{
+var index = idValue.lastIndexOf("_root");
+return (index > 1);
+}
+
+var continentStore = new dojo.data.ItemFileReadStore({data: logStore});
+continentStore.fetch({query :{eventType: "*"}, queryOptions :{ignoreCase: "true", deep: "true"}, onItem: routeItems, onError: failed });
+function updateDatapool(store,item)
+{
+	var parentIdValue = store.getValue(item,"ParentId");
+	var position = store.getValue(item,"Position");
+	var index = parentIdValue.lastIndexOf("_root");
+	if(index > 1)
+		parentIdValue = parentIdValue.substring(0,index);
+	var dpValue = parentIdValue.replace(/event_/,"dp_");
+	
+	dpLogStore.fetchItemByIdentity({identity: dpValue, onItem: function(item){
+
+				deleteStaleDatapool();
+				var dpData = dpLogStore.getValues(item,"dpUpdates")
+				
+				var dpVariableList = new Array();
+				
+				for(var i=0;i<dpData.length;i++)
+				{
+				var j = 0;
+				if(dpData[i].dpVariable && parseInt(dpData[i].CPosition) <= parseInt(position))
+				{
+					for(j=0;j<dpVariableList.length;j++)
+					{
+						if(dpVariableList[j].dpVariable == dpData[i].dpVariable)
+						{							
+							break;									
+						}
+					}
+					
+					dpVariableList[j] = dpData[i];				
+				}
+				}	
+
+				var variableRow = dojo.byId("dpVariable");
+				var valueRow = dojo.byId("dpValue");
+				for(var i=0;i<dpVariableList.length;i++)
+				{				
+					var cell=  variableRow.insertCell(i);
+					cell.innerHTML = dpVariableList[i].dpVariable;
+
+					var cell1=  valueRow.insertCell(i);
+					cell1.innerHTML = dpVariableList[i].dpValue;
+				}
+
+
+			}});	
+}
+
+function deleteStaleDatapool()
+{
+	var dpVariable = dojo.byId("dpVariable");
+	var dpValue = dojo.byId("dpValue");	
+	var num = dpVariable.cells.length;
+	for(var i=0;i<num;i++)
+	{
+		dpVariable.deleteCell(0);
+		dpValue.deleteCell(0);
+	}
+}
+
+function getSuccessCount()
+{
+	return verdictSuccess;
+}
+
+function getFailuresCount()
+{
+	return verdictFailures;
+}
+
+function getWarningsCount()
+{
+	return verdictWarnings;
+}
+
+function getMessagesCount()
+{
+	return verdictMessages;
+}
+
+function getFailuresVPCount()
+{
+	return verdictVPFailures;
+}
+
+function getSuccessVPCount()
+{
+	return verdictVPSuccess;
+}
+
+
+var totalVerdict = new Array();
+totalVerdict.push(verdictSuccess);
+totalVerdict.push(verdictFailures);
+totalVerdict.push(verdictWarnings);
+totalVerdict.push(verdictMessages);
+
+
+
+var passFilterEnabled = true;
+var failFilterEnabled = true;
+var warningFilterEnabled = true;
+var messageFilterEnabled = true;
+
+function passFilterChecked(checked)
+{
+	passFilterEnabled = checked;
+	refreshTree();
+}
+
+function failureFilterChecked(checked)
+{
+	failFilterEnabled = checked;
+	refreshTree();
+}
+function warningFilterChecked(checked)
+{
+	warningFilterEnabled = checked;
+		refreshTree();
+}
+function messageFilterChecked(checked)
+{
+	messageFilterEnabled = checked;
+		refreshTree();
+}
+
+function refreshTree()
+{
+	var verdictTree = dijit.byId("LeftVerdictOverviewTreePane");
+	if(verdictTree != null)
+	{
+		var newStore = verdictTree.store;
+		var childAttr = verdictTree.childrenAttr;
+		var label = verdictTree.label;
+		var query = verdictTree.query;
+		var id = "LeftVerdictOverviewTreePane";
+		var labelAttr = verdictTree.labelAttr; 
+		
+		verdictTree.destroy();
+
+		var newTree = new rft.Tree({ store : newStore,label: label, labelAttr: labelAttr, childrenAttr:childAttr , query:query , id:id });
+
+		dojo.byId("LeftVerdictOverviewPane").appendChild(newTree.domNode,1);
+		
+	}
+}
+function isItemNonFiltered(store,item)
+{
+	var verdict = store.getValue(item,"Result");
+	if(verdict == "PASS")
+	{
+		return passFilterEnabled;
+	}else if(verdict == "FAIL")
+	{
+		return failFilterEnabled;
+	}else if(verdict == "WARNING")
+	{
+		return warningFilterEnabled;
+	}else if(verdict == "INFORMATION")
+	{
+		return messageFilterEnabled;
+	}
+	else
+	{
+		return false;
+	}	
+}
+function comparator(base,exp,act)
+{
+	try{
+		var url = decodeURI(document.URL);
+		var index = url.indexOf("?");
+		if(index > 1)
+			url = url.substr(0,index);
+		document.ComparatorApplet.startComparatorEx(base,exp,act,url);
+	}
+	catch(e){
+		alert("CRFCN0309E: Error creating verification point display:\nAn enabled JRE (1.3.1_02 or better) must be associated with the browser to view VP results");
+	}
+}
+
+function toggleFilterCheckbox(id)
+{
+	var filterCkb = dijit.byId(id);
+	if(filterCkb != null)
+		filterCkb.setChecked(!filterCkb.checked);
+}
+
+var rftTheme =  dojox.charting.themes.PlotKit.blue;
+rftTheme.defineColors({colors: ["#006400","#8b0000","#b8860b","#008b8b"]});
+
+
+
+}
+</script>
+</HEAD>
+<BODY class="tundra">
+<div id="TopPane" dojoType="dijit.layout.LayoutContainer" style="width: 100%; height:100%; overflow: auto;">
+<div dojoType="dijit.layout.ContentPane" class="top" layoutAlign="top" id="banner" width="100%" height="46px">
+<img height="46px" width="80px" src="../Log_Assistive_Files/IBM_logo_banner.gif" align="right" border="0"></div>
+<div id="VerdictPane" dojoType="dijit.layout.SplitContainer" layoutAlign="client" orientation="horizontal" sizerWidth="5" activeSizing="0">
+<div id="LeftVerdictOverviewContainer" dojoType="dijit.layout.SplitContainer" orientation="vertical" sizerWidth="5" activeSizing="0" sizeShare="20" sizeMin="20">
+<div id="LeftVerdictOverviewPane" dojoType="dijit.layout.ContentPane" sizeShare="60">
+<div id="LeftVerdictOverviewDescPane" dojoType="dijit.TitlePane" open="true" title="Veredicto de la prueba">
+					Select the filter	
+					
+					<div id="verdictFilterToolbar1" dojoType="dijit.Toolbar">
+<div dojoType="dijit.form.Button" id="successFilter" iconClass="passIcon" onClick="toggleFilterCheckbox('successFilterCkb')" showLabel="true">Satisfactorios</div>
+<div dojoType="dijit.form.CheckBox" id="successFilterCkb" onChange="passFilterChecked" checked="checked"></div>
+<span dojoType="dijit.ToolbarSeparator"></span>
+<div dojoType="dijit.form.Button" id="failureFilter" iconClass="failureIcon" onClick="toggleFilterCheckbox('failureFilterCkb')" showLabel="true">Anomalías</div>
+<div dojoType="dijit.form.CheckBox" id="failureFilterCkb" onChange="failureFilterChecked" checked="checked"></div>
+<span dojoType="dijit.ToolbarSeparator"></span>
+<div dojoType="dijit.form.Button" id="warningFilter" iconClass="warningIcon" onClick="toggleFilterCheckbox('warningFilterCkb')" showLabel="true">Avisos</div>
+<div dojoType="dijit.form.CheckBox" id="warningFilterCkb" onChange="warningFilterChecked" checked="checked"></div>
+<span dojoType="dijit.ToolbarSeparator"></span>
+<div dojoType="dijit.form.Button" id="messageFilter" iconClass="informationIcon" onClick="toggleFilterCheckbox('messageFilterCkb')" showLabel="true">Mensajes</div>
+<div dojoType="dijit.form.CheckBox" id="messageFilterCkb" onChange="messageFilterChecked" checked="checked"></div>
+</div>
+</div>
+<div id="LeftVerdictOverviewTreePane" dojoType="rft.Tree" store="continentStore" query="{eventType: 'rftevent'}" label="Veredicto" openOnClick="true" childrenAttr="events"></div>
+</div>
+<div id="LeftVerdictSpecificsContainer" dojoType="dijit.layout.AccordionContainer" duration="200" sizeMin="20" sizeShare="40">
+<div id="LeftVerdictVerificationPane" dojoType="dijit.layout.AccordionPane" title="Puntos de verificación">
+<div id="LeftVerdictVerificationTree" dojoType="rft.Tree" store="verificationPointStore"></div>
+</div>
+<div id="LeftVerdictFailuresPane" dojoType="dijit.layout.AccordionPane" title="Veredictos de anomalía">
+<div id="LeftVerdictFailureTree" dojoType="rft.Tree" store="failedVerdictStore"></div>
+</div>
+<div id="LeftVerdictWarningsPane" dojoType="dijit.layout.AccordionPane" title="Veredictos de avisos">
+<div id="LeftVerdictWarningTree" dojoType="rft.Tree" store="warningVerdictStore"></div>
+</div>
+</div>
+</div>
+<div id="RightVerdictDetailContainer" dojoType="dijit.layout.SplitContainer" orientation="vertical" sizerWidth="5" sizeShare="80" activeSizing="0">
+<div id="RightVerdictDetailPane" dojoType="dijit.layout.ContentPane" layoutAlign="top" sizeShare="90">
+<div id="RightVerdictDetailOverview" dojoType="dijit.TitlePane" open="true" title="Veredicto general">
+<table width="100%" rules="rows">
+<tr>
+<td ROWSPAN="2" width="300">
+<div layoutAlign="centre" dojoType="dojox.charting.widget.Chart2D" theme="rftTheme" id="RightVerdictOverviewChart" style="overflow-x:hidden;overflow-y:hidden;width: 300px; height: 300px;">
+<div class="plot" name="default" type="Pie" radius="100" fontColor="white" htmlLabels="false"></div>
+<div class="series" name="Overall Verdict" array="totalVerdict"></div>
+</div>
+</td><td>
+<table>
+<tr>
+<td class="passIcon" width="10px"></td><td>
+<div class="pass">Satisfactorios</div>
+</td><td>:</td><td>
+<div class="pass" id="SuccessList"></div>
+</td>
+</tr>
+<tr>
+<td class="failureIcon" width="10px"></td><td>
+<div class="fail">Anomalías</div>
+</td><td>:</td><td align="center">
+<div class="fail" id="FailureList"></div>
+</td>
+</tr>
+<tr>
+<td class="warningIcon" width="10px"></td><td>
+<div class="warn">Avisos</div>
+</td><td>:</td><td>
+<div class="warn" id="WarningList"></div>
+</td>
+</tr>
+<tr>
+<td class="informationIcon" width="10px"></td><td>
+<div class="info">Mensajes</div>
+</td><td>:</td><td>
+<div class="info" id="MessageList"></div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td>
+<table>
+<tr>
+<td class="vpPassIcon" width="10px"></td><td>
+<div class="pass">Puntos de verificación satisfactorios</div>
+</td><td>:</td><td>
+<div class="pass" id="SuccessVPList"></div>
+</td>
+</tr>
+<tr>
+<td class="vpFailIcon" width="10px"></td><td>
+<div class="fail">Puntos de verificación fallidos</div>
+</td><td>:</td><td>
+<div class="fail" id="FailureVPList"></div>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+<TABLE id="RightVerdictDetailsTable" border="1" rules="rows" width="100%" summary="Log Events">
+<TR id="event_Callscripts.Z_00_Maestro_E4_AbT0">
+<TD class="info">INFORMACIÓN</TD><TD class="time">19 de agosto de 2014 12:29:55 CLT</TD><TD class="note">Inicio de script [Callscripts.Z_00_Maestro_E4]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>1</LI>
+<LI>
+<I>Recuento de repetición = </I>0</LI>
+<LI>
+<I>Nombre de script = </I>Callscripts.Z_00_Maestro_E4</LI>
+<LI>
+<I>Identificador de script = </I>Callscripts.Z_00_Maestro_E4.java</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Callscripts.Z_00_Maestro_E4_AbT4">
+<TD class="info">INFORMACIÓN</TD><TD class="time">19 de agosto de 2014 12:29:55 CLT</TD><TD class="note">Invocar script [Script.RP_GENERICO_01]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de propiedad = </I>Script.RP_GENERICO_01</LI>
+<LI>
+<I>Número de línea = </I>39</LI>
+<LI>
+<I>Nombre de script = </I>Callscripts.Z_00_Maestro_E4</LI>
+<LI>
+<I>Identificador de script = </I>Callscripts.Z_00_Maestro_E4.java</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.RP_GENERICO_01_AbT1">
+<TD class="info">INFORMACIÓN</TD><TD class="time">19 de agosto de 2014 12:29:55 CLT</TD><TD class="note">Inicio de script [Script.RP_GENERICO_01]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>1</LI>
+<LI>
+<I>Recuento de repetición = </I>0</LI>
+<LI>
+<I>Nombre de script = </I>Script.RP_GENERICO_01</LI>
+<LI>
+<I>Identificador de script = </I>Script.RP_GENERICO_01.java</LI>
+<LI>\LIB\Datapool.rftdp</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.RP_GENERICO_01_AbT5">
+<TD class="info">INFORMACIÓN</TD><TD class="time">19 de agosto de 2014 12:30:00 CLT</TD><TD class="note">Iniciar aplicación [T01]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de propiedad = </I>T01</LI>
+<LI>
+<I>Número de línea = </I>37</LI>
+<LI>
+<I>Nombre de script = </I>Script.RP_GENERICO_01</LI>
+<LI>
+<I>Tipo de aplicación = </I>HTML</LI>
+<LI>
+<I>StartApp Executable = </I>firefox.exe</LI>
+<LI>http://192.168.201.33:7001/sigfe/</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.RP_GENERICO_01_AbT6">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:05 CLT</TD><TD class="note">setText en la Text text_j_username</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>39</LI>
+<LI>
+<I>Nombre de script = </I>Script.RP_GENERICO_01</LI>
+<LI>
+<I>Información adicional = </I>Usua_0908001 </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.RP_GENERICO_01_AbT7">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:07 CLT</TD><TD class="note">setText en la Text text_j_password</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>40</LI>
+<LI>
+<I>Nombre de script = </I>Script.RP_GENERICO_01</LI>
+<LI>
+<I>Información adicional = </I>usuario1234 </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.RP_GENERICO_01_AbT8">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:07 CLT</TD><TD class="note">click en la Button button_ingresarsubmit</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>41</LI>
+<LI>
+<I>Nombre de script = </I>Script.RP_GENERICO_01</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.RP_GENERICO_01_AbT9">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:07 CLT</TD><TD class="note">Final de script [Script.RP_GENERICO_01]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de script = </I>Script.RP_GENERICO_01</LI>
+<LI>
+<I>Identificador de script = </I>Script.RP_GENERICO_01.java</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Callscripts.Z_00_Maestro_E4_AbT10">
+<TD class="info">INFORMACIÓN</TD><TD class="time">19 de agosto de 2014 12:30:07 CLT</TD><TD class="note">Invocar script [Script.CO_GENERICO_04]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de propiedad = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Número de línea = </I>641</LI>
+<LI>
+<I>Nombre de script = </I>Callscripts.Z_00_Maestro_E4</LI>
+<LI>
+<I>Identificador de script = </I>Callscripts.Z_00_Maestro_E4.java</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT2">
+<TD class="info">INFORMACIÓN</TD><TD class="time">19 de agosto de 2014 12:30:07 CLT</TD><TD class="note">Inicio de script [Script.CO_GENERICO_04]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>1</LI>
+<LI>
+<I>Recuento de repetición = </I>0</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Identificador de script = </I>Script.CO_GENERICO_04.java</LI>
+<LI>\LIB\Datapool.rftdp</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT11">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:11 CLT</TD><TD class="note">click en la Link link_contabilidad</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>47</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT12">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:11 CLT</TD><TD class="note">click en la Table table_idPgTplJ_id66Menu</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>48</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Información adicional = </I>Cell(Column(1), Row(0)) </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT13">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:20 CLT</TD><TD class="note">select en la List list_seleccione</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>54</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Información adicional = </I>Devengo </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT14">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:21 CLT</TD><TD class="note">select en la List list_seleccione2</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>55</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Información adicional = </I>Por Completar </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT15">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:24 CLT</TD><TD class="note">click en la Button button_buscarsubmit2</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>57</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT16">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:28 CLT</TD><TD class="note">click en la Table table_htmlTable_0</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>60</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Información adicional = </I>Cell(Column(4), Row(0)) </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT17">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:28 CLT</TD><TD class="note">inputKeys en la Browser browser_htmlBrowser</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>62</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Información adicional = </I>{TAB 2} </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT18">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:29 CLT</TD><TD class="note">inputKeys en la Browser browser_htmlBrowser</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>63</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Información adicional = </I>{ENTER} </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT19">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:30:32 CLT</TD><TD class="note">Final de script [Script.CO_GENERICO_04]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Identificador de script = </I>Script.CO_GENERICO_04.java</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Callscripts.Z_00_Maestro_E4_AbT20">
+<TD class="info">INFORMACIÓN</TD><TD class="time">19 de agosto de 2014 12:30:32 CLT</TD><TD class="note">Invocar script [Script.CO_GENERICO_04]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de propiedad = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Número de línea = </I>650</LI>
+<LI>
+<I>Nombre de script = </I>Callscripts.Z_00_Maestro_E4</LI>
+<LI>
+<I>Identificador de script = </I>Callscripts.Z_00_Maestro_E4.java</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT3">
+<TD class="info">INFORMACIÓN</TD><TD class="time">19 de agosto de 2014 12:30:32 CLT</TD><TD class="note">Inicio de script [Script.CO_GENERICO_04]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>1</LI>
+<LI>
+<I>Recuento de repetición = </I>0</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Identificador de script = </I>Script.CO_GENERICO_04.java</LI>
+<LI>\LIB\Datapool.rftdp</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT21">
+<TD class="pass">PASADO</TD><TD class="time">19 de agosto de 2014 12:31:11 CLT</TD><TD class="note">click en la Link link_idPgTplItAgrp0SgfCmbCuent</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Número de línea = </I>71</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT22">
+<TD class="fail">FALLO</TD><TD class="time">19 de agosto de 2014 12:31:11 CLT</TD><TD class="note">CRFCN0596E: El usuario de Script.CO_GENERICO_04.EliminarDatos solicitó una conclusión de script [Script.CO_GENERICO_04].</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de excepción = </I>com.rational.test.ft.UserStoppedScriptError</LI>
+<LI>
+<I>Mensaje de excepción = </I>"Se ha pulsado la tecla de cambio de modalidad"</LI>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Identificador de script = </I>Script.CO_GENERICO_04.java</LI>
+<LI>
+<I>Número de línea = </I>71</LI>
+<LI>
+<I>Pila de excepción = </I> at com.rational.test.ft.object.interfaces.ClientTestObject.invokeProxy(ClientTestObject.java:411)  at com.rational.test.ft.object.interfaces.GuiTestObject.click(GuiTestObject.java:593)  at Script.CO_GENERICO_04.EliminarDatos(CO_GENERICO_04.java:71)  at Script.CO_GENERICO_04.testMain(CO_GENERICO_04.java:327)  at Callscripts.Z_00_Maestro_E4.testMain(Z_00_Maestro_E4.java:650)  at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethodWithException(EclipseAppContainer.java:587)  at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:198)  at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)  at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)  at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:369)  at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)  at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:620)  at org.eclipse.equinox.launcher.Main.basicRun(Main.java:575)  at org.eclipse.equinox.launcher.Main.run(Main.java:1408)  at org.eclipse.equinox.launcher.Main.main(Main.java:1384)  at org.eclipse.core.launcher.Main.main(Main.java:34) </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Script.CO_GENERICO_04_AbT23">
+<TD class="fail">FALLO</TD><TD class="time">19 de agosto de 2014 12:31:11 CLT</TD><TD class="note">Final de script [Script.CO_GENERICO_04]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de script = </I>Script.CO_GENERICO_04</LI>
+<LI>
+<I>Identificador de script = </I>Script.CO_GENERICO_04.java</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Callscripts.Z_00_Maestro_E4_AbT24">
+<TD class="fail">FALLO</TD><TD class="time">19 de agosto de 2014 12:31:11 CLT</TD><TD class="note">CRFCN0647E: Callscripts.Z_00_Maestro_E4.testMain tenía un error no controlado en el script invocado [Script.CO_GENERICO_04].</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de excepción = </I>com.rational.test.ft.UserStoppedScriptError</LI>
+<LI>
+<I>Mensaje de excepción = </I>"Se ha pulsado la tecla de cambio de modalidad"</LI>
+<LI>
+<I>Nombre de script = </I>Callscripts.Z_00_Maestro_E4</LI>
+<LI>
+<I>Identificador de script = </I>Callscripts.Z_00_Maestro_E4.java</LI>
+<LI>
+<I>Número de línea = </I>650</LI>
+<LI>
+<I>Pila de excepción = </I> at com.rational.test.ft.object.interfaces.ClientTestObject.invokeProxy(ClientTestObject.java:411)  at com.rational.test.ft.object.interfaces.GuiTestObject.click(GuiTestObject.java:593)  at Script.CO_GENERICO_04.EliminarDatos(CO_GENERICO_04.java:71)  at Script.CO_GENERICO_04.testMain(CO_GENERICO_04.java:327)  at Callscripts.Z_00_Maestro_E4.testMain(Z_00_Maestro_E4.java:650)  at org.eclipse.equinox.internal.app.EclipseAppContainer.callMethodWithException(EclipseAppContainer.java:587)  at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:198)  at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)  at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)  at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:369)  at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)  at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:620)  at org.eclipse.equinox.launcher.Main.basicRun(Main.java:575)  at org.eclipse.equinox.launcher.Main.run(Main.java:1408)  at org.eclipse.equinox.launcher.Main.main(Main.java:1384)  at org.eclipse.core.launcher.Main.main(Main.java:34) </LI>
+</UL>
+</TD>
+</TR>
+<TR id="event_Callscripts.Z_00_Maestro_E4_AbT25">
+<TD class="fail">FALLO</TD><TD class="time">19 de agosto de 2014 12:31:11 CLT</TD><TD class="note">Final de script [Callscripts.Z_00_Maestro_E4]</TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL>
+<LI>
+<I>Nombre de script = </I>Callscripts.Z_00_Maestro_E4</LI>
+<LI>
+<I>Identificador de script = </I>Callscripts.Z_00_Maestro_E4.java</LI>
+</UL>
+</TD>
+</TR>
+<TR id="event__AbT26">
+<TD class="unkn">INFORMACIÓN</TD><TD class="time"></TD><TD class="note"></TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL></UL>
+</TD>
+</TR>
+<TR id="event__AbT27">
+<TD class="unkn">INFORMACIÓN</TD><TD class="time"></TD><TD class="note"></TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL></UL>
+</TD>
+</TR>
+<TR id="event__AbT28">
+<TD class="unkn">INFORMACIÓN</TD><TD class="time"></TD><TD class="note"></TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL></UL>
+</TD>
+</TR>
+<TR id="event__AbT29">
+<TD class="unkn">INFORMACIÓN</TD><TD class="time"></TD><TD class="note"></TD>
+</TR>
+<TR>
+<TD COLSPAN="3">
+<UL></UL>
+</TD>
+</TR>
+</TABLE>
+<div id="RightVerdictBottomContainer" dojoType="dijit.layout.LayoutContainer" layoutAlign="bottom" sizeShare="10">
+<div id="RightVerdictBottomDatapool" dojoType="dijit.TitlePane" open="false" title="Valores de agrupación de datos">
+<table id="dpTable" border="1">
+<tr id="dpVariable" align="center"></tr>
+<tr id="dpValue" align="center"></tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+		if(!location.search)
+		{
+			var topTag = document.getElementById("TopPane");
+			topTag.innerHTML = "";
+			
+			
+			var inputElement = document.createElement("input");
+			inputElement.type = "file";
+			inputElement.id = "dojolocation";
+			topTag.appendChild(inputElement);
+			var openLog  = document.createElement("input");
+			openLog.type = "button";
+			openLog.id = "openlog";
+			openLog.value = "Open Log";
+			openLog.onclick = function(){
+						var dojoLoc = document.getElementById("dojolocation").value;
+						var newLoc = location.href + "?" + dojoLoc;
+						location.assign(newLoc);
+			};
+			topTag.appendChild(openLog);
+
+
+		}
+		else
+		{
+		
+			var sucCount = dojo.byId("SuccessList");
+			sucCount.innerHTML =  verdictSuccess;
+			sucCount = dojo.byId("FailureList");
+			sucCount.innerHTML =  verdictFailures;
+			sucCount = dojo.byId("WarningList");
+			sucCount.innerHTML =  verdictWarnings;
+			sucCount = dojo.byId("MessageList");
+			sucCount.innerHTML =  verdictMessages;
+			sucCount = dojo.byId("SuccessVPList");
+			sucCount.innerHTML =  verdictVPSuccess;
+			sucCount = dojo.byId("FailureVPList");	
+			sucCount.innerHTML = verdictVPFailures;
+		
+		}
+		</script><APPLET ARCHIVE="http://localhost:9100/rational_ft_bootstrap.jar" CODE="com/rational/test/ft/bootstrap/HtmlLogComparatorApplet.class" NAME="ComparatorApplet" WIDTH="0" HEIGHT="0"></APPLET></BODY>
+</HTML>
