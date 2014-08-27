@@ -20,11 +20,11 @@ import com.rational.test.ft.vp.IFtVerificationPoint;
 import com.ibm.rational.test.ft.object.interfaces.sapwebportal.*;
 /**
  * Script Name   : <b>RP_Multiple_Gastos_Moneda_Nacional_Generar</b><br>
- * Generated     : <b>2014/08/26 13:23:38</b><br>
+ * Generated     : <b>2014/08/27 16:16:19</b><br>
  * Description   : Helper class for script<br>
  * Original Host : Windows XP x86 5.1 <br>
  * 
- * @since  agosto 26, 2014
+ * @since  agosto 27, 2014
  * @author cpena
  */
 public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends Librerias.Funciones_Globales
@@ -267,6 +267,37 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	{
 		return new GuiTestObject(
                         getMappedTestObject("button_aceptarsubmit7"), anchor, flags);
+	}
+	
+	/**
+	 * Aceptarsubmit: with default state.
+	 *		.id : idDocPrincipal::msgDlg::cancel
+	 * 		.type : submit
+	 * 		.value : 
+	 * 		.title : 
+	 * 		.class : Html.BUTTON
+	 * 		.name : 
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject button_aceptarsubmit8() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_aceptarsubmit8"));
+	}
+	/**
+	 * Aceptarsubmit: with specific test context and state.
+	 *		.id : idDocPrincipal::msgDlg::cancel
+	 * 		.type : submit
+	 * 		.value : 
+	 * 		.title : 
+	 * 		.class : Html.BUTTON
+	 * 		.name : 
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject button_aceptarsubmit8(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_aceptarsubmit8"), anchor, flags);
 	}
 	
 	/**
@@ -984,6 +1015,31 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	}
 	
 	/**
+	 * _1409170069981: with default state.
+	 *		.id : 1409170069981
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject html__1409170069981() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html__1409170069981"));
+	}
+	/**
+	 * _1409170069981: with specific test context and state.
+	 *		.id : 1409170069981
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject html__1409170069981(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html__1409170069981"), anchor, flags);
+	}
+	
+	/**
 	 * __af_Z_window: with default state.
 	 *		.id : __af_Z_window
 	 * 		.title : 
@@ -1006,6 +1062,106 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	{
 		return new GuiTestObject(
                         getMappedTestObject("html___af_Z_window"), anchor, flags);
+	}
+	
+	/**
+	 * confirmarPopupPanelMensajeConfirmacion: with default state.
+	 *		.id : confirmarPopup:panelMensajeConfirmacion
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 2
+	 */
+	protected GuiTestObject html_confirmarPopupPanelMensaj() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPanelMensaj"));
+	}
+	/**
+	 * confirmarPopupPanelMensajeConfirmacion: with specific test context and state.
+	 *		.id : confirmarPopup:panelMensajeConfirmacion
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 2
+	 */
+	protected GuiTestObject html_confirmarPopupPanelMensaj(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPanelMensaj"), anchor, flags);
+	}
+	
+	/**
+	 * confirmarPopupPanelMensajesConfirmarAccion: with default state.
+	 *		.id : confirmarPopup:panelMensajesConfirmarAccion
+	 * 		.title : 
+	 * 		.class : Html.SPAN
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject html_confirmarPopupPanelMensaj2() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPanelMensaj2"));
+	}
+	/**
+	 * confirmarPopupPanelMensajesConfirmarAccion: with specific test context and state.
+	 *		.id : confirmarPopup:panelMensajesConfirmarAccion
+	 * 		.title : 
+	 * 		.class : Html.SPAN
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject html_confirmarPopupPanelMensaj2(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPanelMensaj2"), anchor, flags);
+	}
+	
+	/**
+	 * confirmarPopupPopupConfirmarAccionDialog: with default state.
+	 *		.id : confirmarPopup:popupConfirmarAccionDialog
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject html_confirmarPopupPopupConfir() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPopupConfir"));
+	}
+	/**
+	 * confirmarPopupPopupConfirmarAccionDialog: with specific test context and state.
+	 *		.id : confirmarPopup:popupConfirmarAccionDialog
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject html_confirmarPopupPopupConfir(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPopupConfir"), anchor, flags);
+	}
+	
+	/**
+	 * confirmarPopupPopupConfirmarAccionContent: with default state.
+	 *		.id : confirmarPopup:popupConfirmarAccion::content
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject html_confirmarPopupPopupConfir2() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPopupConfir2"));
+	}
+	/**
+	 * confirmarPopupPopupConfirmarAccionContent: with specific test context and state.
+	 *		.id : confirmarPopup:popupConfirmarAccion::content
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject html_confirmarPopupPopupConfir2(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPopupConfir2"), anchor, flags);
 	}
 	
 	/**
@@ -1319,8 +1475,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * CambiarTamaño: with default state.
 	 *		.text : 
-	 * 		.id : idDocPrincipal::msgDlg::_ree
 	 * 		.href : 
+	 * 		.id : idDocPrincipal::msgDlg::_ree
 	 * 		.title : Cambiar Tamaño
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1334,8 +1490,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * CambiarTamaño: with specific test context and state.
 	 *		.text : 
-	 * 		.id : idDocPrincipal::msgDlg::_ree
 	 * 		.href : 
+	 * 		.id : idDocPrincipal::msgDlg::_ree
 	 * 		.title : Cambiar Tamaño
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1350,8 +1506,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * Cerrar: with default state.
 	 *		.text : 
-	 * 		.id : idDocPrincipal::msgDlg::close
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
+	 * 		.id : idDocPrincipal::msgDlg::close
 	 * 		.title : Cerrar
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1365,8 +1521,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * Cerrar: with specific test context and state.
 	 *		.text : 
-	 * 		.id : idDocPrincipal::msgDlg::close
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
+	 * 		.id : idDocPrincipal::msgDlg::close
 	 * 		.title : Cerrar
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1381,8 +1537,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * idPgTplCmdLnkGuardarBorradorInferior: with default state.
 	 *		.text : Guardar Digitado
-	 * 		.id : idPgTpl:cmdLnkGuardarBorradorInferior
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
+	 * 		.id : idPgTpl:cmdLnkGuardarBorradorInferior
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1396,8 +1552,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * idPgTplCmdLnkGuardarBorradorInferior: with specific test context and state.
 	 *		.text : Guardar Digitado
-	 * 		.id : idPgTpl:cmdLnkGuardarBorradorInferior
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
+	 * 		.id : idPgTpl:cmdLnkGuardarBorradorInferior
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1412,8 +1568,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * idPgTplItAgrps0Cci1ClkAddConc: with default state.
 	 *		.text : Agregar Concepto Presupuestario
-	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
 	 * 		.id : idPgTpl:itAgrps:0:cci1:clkAddConc
+	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1427,8 +1583,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * idPgTplItAgrps0Cci1ClkAddConc: with specific test context and state.
 	 *		.text : Agregar Concepto Presupuestario
-	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
 	 * 		.id : idPgTpl:itAgrps:0:cci1:clkAddConc
+	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1443,8 +1599,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * idPgTplItAgrps1Cci1ClkAddConc: with default state.
 	 *		.text : Agregar Concepto Presupuestario
-	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
 	 * 		.id : idPgTpl:itAgrps:1:cci1:clkAddConc
+	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1458,8 +1614,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * idPgTplItAgrps1Cci1ClkAddConc: with specific test context and state.
 	 *		.text : Agregar Concepto Presupuestario
-	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
 	 * 		.id : idPgTpl:itAgrps:1:cci1:clkAddConc
+	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1474,8 +1630,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * idPgTplItAgrps2Cci1ClkAddConc: with default state.
 	 *		.text : Agregar Concepto Presupuestario
-	 * 		.id : idPgTpl:itAgrps:2:cci1:clkAddConc
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
+	 * 		.id : idPgTpl:itAgrps:2:cci1:clkAddConc
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1489,8 +1645,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * idPgTplItAgrps2Cci1ClkAddConc: with specific test context and state.
 	 *		.text : Agregar Concepto Presupuestario
-	 * 		.id : idPgTpl:itAgrps:2:cci1:clkAddConc
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-multiprograma-registro ...
+	 * 		.id : idPgTpl:itAgrps:2:cci1:clkAddConc
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1505,8 +1661,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * Requerimiento: with default state.
 	 *		.text : Requerimiento
-	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenidaInicio?_adf.no-new-window-redirect=t ...
 	 * 		.id : 
+	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenidaInicio?_adf.no-new-window-redirect=t ...
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -1520,8 +1676,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	/**
 	 * Requerimiento: with specific test context and state.
 	 *		.text : Requerimiento
-	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenidaInicio?_adf.no-new-window-redirect=t ...
 	 * 		.id : 
+	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenidaInicio?_adf.no-new-window-redirect=t ...
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -2039,6 +2195,60 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	}
 	
 	/**
+	 * HtmlTable_0: with default state.
+	 *		.id : 
+	 * 		.title : 
+	 * 		.class : Html.TABLE
+	 * 		.caption : 
+	 * 		.classIndex : 0
+	 */
+	protected StatelessGuiSubitemTestObject table_htmlTable_0_6() 
+	{
+		return new StatelessGuiSubitemTestObject(
+                        getMappedTestObject("table_htmlTable_0_6"));
+	}
+	/**
+	 * HtmlTable_0: with specific test context and state.
+	 *		.id : 
+	 * 		.title : 
+	 * 		.class : Html.TABLE
+	 * 		.caption : 
+	 * 		.classIndex : 0
+	 */
+	protected StatelessGuiSubitemTestObject table_htmlTable_0_6(TestObject anchor, long flags) 
+	{
+		return new StatelessGuiSubitemTestObject(
+                        getMappedTestObject("table_htmlTable_0_6"), anchor, flags);
+	}
+	
+	/**
+	 * HtmlTable_0: with default state.
+	 *		.id : 
+	 * 		.title : 
+	 * 		.class : Html.TABLE
+	 * 		.caption : 
+	 * 		.classIndex : 0
+	 */
+	protected StatelessGuiSubitemTestObject table_htmlTable_0_7() 
+	{
+		return new StatelessGuiSubitemTestObject(
+                        getMappedTestObject("table_htmlTable_0_7"));
+	}
+	/**
+	 * HtmlTable_0: with specific test context and state.
+	 *		.id : 
+	 * 		.title : 
+	 * 		.class : Html.TABLE
+	 * 		.caption : 
+	 * 		.classIndex : 0
+	 */
+	protected StatelessGuiSubitemTestObject table_htmlTable_0_7(TestObject anchor, long flags) 
+	{
+		return new StatelessGuiSubitemTestObject(
+                        getMappedTestObject("table_htmlTable_0_7"), anchor, flags);
+	}
+	
+	/**
 	 * HtmlTable_1: with default state.
 	 *		.id : 
 	 * 		.title : 
@@ -2552,8 +2762,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	 * svwAgregarConceptoPresPopUpTAddCP0Valor: with default state.
 	 *		.id : svwAgregarConceptoPresPopUp:tAddCP:0:valor::content
 	 * 		.type : text
-	 * 		.class : Html.INPUT.text
 	 * 		.title : 
+	 * 		.class : Html.INPUT.text
 	 * 		.name : svwAgregarConceptoPresPopUp:tAddCP:0:valor
 	 * 		.classIndex : 0
 	 */
@@ -2566,8 +2776,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	 * svwAgregarConceptoPresPopUpTAddCP0Valor: with specific test context and state.
 	 *		.id : svwAgregarConceptoPresPopUp:tAddCP:0:valor::content
 	 * 		.type : text
-	 * 		.class : Html.INPUT.text
 	 * 		.title : 
+	 * 		.class : Html.INPUT.text
 	 * 		.name : svwAgregarConceptoPresPopUp:tAddCP:0:valor
 	 * 		.classIndex : 0
 	 */
@@ -2810,27 +3020,39 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_GenerarHelper extends L
 	}
 	
 	/**
-	 * Locate and return the verification point HtmlTable_0_text object in the SUT.
+	 * Locate and return the verification point PV_Confirma_Generar object in the SUT.
 	 */
-	protected IFtVerificationPoint HtmlTable_0_textVP() 
+	protected IFtVerificationPoint PV_Confirma_GenerarVP() 
 	{
-		return vp("HtmlTable_0_text");
+		return vp("PV_Confirma_Generar");
 	}
-	protected IFtVerificationPoint HtmlTable_0_textVP(TestObject anchor)
+	protected IFtVerificationPoint PV_Confirma_GenerarVP(TestObject anchor)
 	{
-		return vp("HtmlTable_0_text", anchor);
+		return vp("PV_Confirma_Generar", anchor);
 	}
 	
 	/**
-	 * Locate and return the verification point pt2ContenedorMsj_text object in the SUT.
+	 * Locate and return the verification point PV_Generacion_RP object in the SUT.
 	 */
-	protected IFtVerificationPoint pt2ContenedorMsj_textVP() 
+	protected IFtVerificationPoint PV_Generacion_RPVP() 
 	{
-		return vp("pt2ContenedorMsj_text");
+		return vp("PV_Generacion_RP");
 	}
-	protected IFtVerificationPoint pt2ContenedorMsj_textVP(TestObject anchor)
+	protected IFtVerificationPoint PV_Generacion_RPVP(TestObject anchor)
 	{
-		return vp("pt2ContenedorMsj_text", anchor);
+		return vp("PV_Generacion_RP", anchor);
+	}
+	
+	/**
+	 * Locate and return the verification point PV_Guardar_Digitado object in the SUT.
+	 */
+	protected IFtVerificationPoint PV_Guardar_DigitadoVP() 
+	{
+		return vp("PV_Guardar_Digitado");
+	}
+	protected IFtVerificationPoint PV_Guardar_DigitadoVP(TestObject anchor)
+	{
+		return vp("PV_Guardar_Digitado", anchor);
 	}
 	
 	

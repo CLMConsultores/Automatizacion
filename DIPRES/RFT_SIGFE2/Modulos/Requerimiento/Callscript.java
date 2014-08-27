@@ -70,7 +70,10 @@ public class Callscript extends CallscriptHelper
 //		ClicLink(".id","idPgTpl:itAgrps:2:cci1:clkAddConc");
 //		button_cancelarsubmit().click();
 		
-		SecondDataPool();
+//		SecondDataPool();
+		
+		String sID_RP = "	Requerimiento generado con éxito y enviado a aprobación con ID 1164474";
+		System.out.println(Integer.parseInt(sID_RP.replaceAll("[\\D]", "")));
 		
 		
 		
@@ -86,15 +89,19 @@ public class Callscript extends CallscriptHelper
 		iDP_RP_CombCat = InicializaDP(sDP_RP_CombCat);
 		
 		iContador = 1;
-		while(iDP_RP_CombCat.dpString("RP_CAT_ID").equals(sRP_ID + iContador))
+		do
 		{
-
+			// Avanzar hasta el primer registro coincidente con el RP actual
+			while(!iDP_RP_CombCat.dpString("RP_CAT_ID").equals(sRP_ID + iContador) && !iDP_RP_CombCat.dpDone()){				
+				iDP_RP_CombCat.dpNext();
+			}
 		// Get a value from the second datapool, first record
-			System.out.println(iDP_RP_CombCat.dpString("RP_CAT_ProgramaInterno"));
+			System.out.println(iDP_RP_CombCat.dpString("RP_CAT_ID"));
 			iContador++;
 			if (!iDP_RP_CombCat.dpDone()) 
 				iDP_RP_CombCat.dpNext();
-		}
+			
+		}while(!iDP_RP_CombCat.dpDone() && iDP_RP_CombCat.dpString("RP_CAT_ID").equals(sRP_ID + iContador));
 	}
 	
 	

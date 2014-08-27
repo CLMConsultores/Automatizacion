@@ -53,6 +53,23 @@ public abstract class Funciones_Globales extends Variables_Globales
 	}
 	
 	
+	/**
+	 * Function: dpSetValue
+	 * Description: Se encarga de setear un valor para una columna especifica
+	 * @param sCampo (String)
+	 * @param sValor (String)
+	 * @return 
+	 * @author Leafar Maina
+	 * Fecha: 27/08/2014
+	 **/
+	public void dpSetValue(String sCampo, String sValor) {
+		// Setear el valor de la columna indicada
+		setDatapool(sCampo, sValor);
+		storeDatapool();
+		
+	}
+	
+	
 	
 	
 	/**

@@ -7,7 +7,7 @@
 // file will be lost when automatically updated.
 
 package resources.Modulos.Requerimiento;
-
+import Librerias.Funciones_Globales;
 import com.rational.test.ft.object.interfaces.*;
 import com.rational.test.ft.object.interfaces.SAP.*;
 import com.rational.test.ft.object.interfaces.WPF.*;
@@ -20,22 +20,45 @@ import com.rational.test.ft.vp.IFtVerificationPoint;
 import com.ibm.rational.test.ft.object.interfaces.sapwebportal.*;
 /**
  * Script Name   : <b>RP_Multiple_Gastos_Moneda_Nacional_Aprobar</b><br>
- * Generated     : <b>2014/08/26 10:17:40</b><br>
+ * Generated     : <b>2014/08/27 17:37:56</b><br>
  * Description   : Helper class for script<br>
  * Original Host : Windows XP x86 5.1 <br>
  * 
- * @since  agosto 26, 2014
+ * @since  agosto 27, 2014
  * @author cpena
  */
-public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends RationalTestScript
+public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends Librerias.Funciones_Globales
 {
+	/**
+	 * htmlBrowser: with default state.
+	 *		.class : Html.HtmlBrowser
+	 * 		.browserName : Firefox 17.0
+	 * 		.processName : firefox.exe
+	 */
+	protected BrowserTestObject browser_htmlBrowser() 
+	{
+		return new BrowserTestObject(
+                        getMappedTestObject("browser_htmlBrowser"));
+	}
+	/**
+	 * htmlBrowser: with specific test context and state.
+	 *		.class : Html.HtmlBrowser
+	 * 		.browserName : Firefox 17.0
+	 * 		.processName : firefox.exe
+	 */
+	protected BrowserTestObject browser_htmlBrowser(TestObject anchor, long flags) 
+	{
+		return new BrowserTestObject(
+                        getMappedTestObject("browser_htmlBrowser"), anchor, flags);
+	}
+	
 	/**
 	 * Aceptarsubmit: with default state.
 	 *		.id : confirmarPopup:botonGrabarDistribucion
 	 * 		.type : submit
 	 * 		.value : 
-	 * 		.class : Html.BUTTON
 	 * 		.title : 
+	 * 		.class : Html.BUTTON
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -49,8 +72,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	 *		.id : confirmarPopup:botonGrabarDistribucion
 	 * 		.type : submit
 	 * 		.value : 
-	 * 		.class : Html.BUTTON
 	 * 		.title : 
+	 * 		.class : Html.BUTTON
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -65,8 +88,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	 *		.id : idDocPrincipal::msgDlg::cancel
 	 * 		.type : submit
 	 * 		.value : 
-	 * 		.class : Html.BUTTON
 	 * 		.title : 
+	 * 		.class : Html.BUTTON
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -80,8 +103,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	 *		.id : idDocPrincipal::msgDlg::cancel
 	 * 		.type : submit
 	 * 		.value : 
-	 * 		.class : Html.BUTTON
 	 * 		.title : 
+	 * 		.class : Html.BUTTON
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -96,8 +119,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	 *		.id : idVerReqAprobacion:comp_BotonConfSeleccion_1:botonConfSelec_1
 	 * 		.type : submit
 	 * 		.value : 
-	 * 		.class : Html.BUTTON
 	 * 		.title : 
+	 * 		.class : Html.BUTTON
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -111,8 +134,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	 *		.id : idVerReqAprobacion:comp_BotonConfSeleccion_1:botonConfSelec_1
 	 * 		.type : submit
 	 * 		.value : 
-	 * 		.class : Html.BUTTON
 	 * 		.title : 
+	 * 		.class : Html.BUTTON
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -123,12 +146,54 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	}
 	
 	/**
+	 * Back: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Back
+	 */
+	protected GuiTestObject button_back() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_back"));
+	}
+	/**
+	 * Back: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Back
+	 */
+	protected GuiTestObject button_back(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_back"), anchor, flags);
+	}
+	
+	/**
+	 * bookmarksMenuButtonContainer: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : bookmarks-menu-button-container
+	 */
+	protected GuiTestObject button_bookmarksMenuButtonCont() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_bookmarksMenuButtonCont"));
+	}
+	/**
+	 * bookmarksMenuButtonContainer: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : bookmarks-menu-button-container
+	 */
+	protected GuiTestObject button_bookmarksMenuButtonCont(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_bookmarksMenuButtonCont"), anchor, flags);
+	}
+	
+	/**
 	 * Buscarsubmit: with default state.
 	 *		.id : idTmpB:componenteBotonBuscar:boton_buscar
 	 * 		.type : submit
 	 * 		.value : 
-	 * 		.class : Html.BUTTON
 	 * 		.title : 
+	 * 		.class : Html.BUTTON
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -142,8 +207,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	 *		.id : idTmpB:componenteBotonBuscar:boton_buscar
 	 * 		.type : submit
 	 * 		.value : 
-	 * 		.class : Html.BUTTON
 	 * 		.title : 
+	 * 		.class : Html.BUTTON
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -154,12 +219,324 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	}
 	
 	/**
+	 * Forward: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Forward
+	 */
+	protected GuiTestObject button_forward() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_forward"));
+	}
+	/**
+	 * Forward: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Forward
+	 */
+	protected GuiTestObject button_forward(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_forward"), anchor, flags);
+	}
+	
+	/**
+	 * Home: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Home
+	 */
+	protected GuiTestObject button_home() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_home"));
+	}
+	/**
+	 * Home: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Home
+	 */
+	protected GuiTestObject button_home(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_home"), anchor, flags);
+	}
+	
+	/**
+	 * Reload: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Reload
+	 */
+	protected GuiTestObject button_reload() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_reload"));
+	}
+	/**
+	 * Reload: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Reload
+	 */
+	protected GuiTestObject button_reload(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_reload"), anchor, flags);
+	}
+	
+	/**
+	 * searchContainer: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : search-container
+	 */
+	protected GuiTestObject button_searchContainer() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_searchContainer"));
+	}
+	/**
+	 * searchContainer: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : search-container
+	 */
+	protected GuiTestObject button_searchContainer(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_searchContainer"), anchor, flags);
+	}
+	
+	/**
+	 * socialToolbarItem: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : social-toolbar-item
+	 */
+	protected GuiTestObject button_socialToolbarItem() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_socialToolbarItem"));
+	}
+	/**
+	 * socialToolbarItem: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : social-toolbar-item
+	 */
+	protected GuiTestObject button_socialToolbarItem(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_socialToolbarItem"), anchor, flags);
+	}
+	
+	/**
+	 * Stop: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Stop
+	 */
+	protected GuiTestObject button_stop() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_stop"));
+	}
+	/**
+	 * Stop: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : Stop
+	 */
+	protected GuiTestObject button_stop(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_stop"), anchor, flags);
+	}
+	
+	/**
+	 * ToolbarButton: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : 
+	 */
+	protected GuiTestObject button_toolbarButton() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_toolbarButton"));
+	}
+	/**
+	 * ToolbarButton: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : 
+	 */
+	protected GuiTestObject button_toolbarButton(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_toolbarButton"), anchor, flags);
+	}
+	
+	/**
+	 * urlbarContainer: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : urlbar-container
+	 */
+	protected GuiTestObject button_urlbarContainer() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_urlbarContainer"));
+	}
+	/**
+	 * urlbarContainer: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : urlbar-container
+	 */
+	protected GuiTestObject button_urlbarContainer(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_urlbarContainer"), anchor, flags);
+	}
+	
+	/**
+	 * urlbarSearchSplitter: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : urlbar-search-splitter
+	 */
+	protected GuiTestObject button_urlbarSearchSplitter() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_urlbarSearchSplitter"));
+	}
+	/**
+	 * urlbarSearchSplitter: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : urlbar-search-splitter
+	 */
+	protected GuiTestObject button_urlbarSearchSplitter(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_urlbarSearchSplitter"), anchor, flags);
+	}
+	
+	/**
+	 * windowControls: with default state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : window-controls
+	 */
+	protected GuiTestObject button_windowControls() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_windowControls"));
+	}
+	/**
+	 * windowControls: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.ToolbarButton
+	 * 		.name : window-controls
+	 */
+	protected GuiTestObject button_windowControls(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("button_windowControls"), anchor, flags);
+	}
+	
+	/**
+	 * aboutBlank: with default state.
+	 *		.title : 
+	 * 		.class : Html.HtmlDocument
+	 * 		.url : about:blank
+	 */
+	protected DocumentTestObject document_aboutBlank() 
+	{
+		return new DocumentTestObject(
+                        getMappedTestObject("document_aboutBlank"));
+	}
+	/**
+	 * aboutBlank: with specific test context and state.
+	 *		.title : 
+	 * 		.class : Html.HtmlDocument
+	 * 		.url : about:blank
+	 */
+	protected DocumentTestObject document_aboutBlank(TestObject anchor, long flags) 
+	{
+		return new DocumentTestObject(
+                        getMappedTestObject("document_aboutBlank"), anchor, flags);
+	}
+	
+	/**
+	 * confirmarPopupPanelMensajeConfirmacion: with default state.
+	 *		.id : confirmarPopup:panelMensajeConfirmacion
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 2
+	 */
+	protected GuiTestObject html_confirmarPopupPanelMensaj() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPanelMensaj"));
+	}
+	/**
+	 * confirmarPopupPanelMensajeConfirmacion: with specific test context and state.
+	 *		.id : confirmarPopup:panelMensajeConfirmacion
+	 * 		.title : 
+	 * 		.class : Html.DIV
+	 * 		.classIndex : 2
+	 */
+	protected GuiTestObject html_confirmarPopupPanelMensaj(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("html_confirmarPopupPanelMensaj"), anchor, flags);
+	}
+	
+	/**
+	 * BúsquedaDeRequerimientosPresupuestarios: with default state.
+	 *		.id : 
+	 * 		.value : 
+	 * 		.title : 
+	 * 		.class : Html.LABEL
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject label_búsquedaDeRequerimientos() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("label_búsquedaDeRequerimientos"));
+	}
+	/**
+	 * BúsquedaDeRequerimientosPresupuestarios: with specific test context and state.
+	 *		.id : 
+	 * 		.value : 
+	 * 		.title : 
+	 * 		.class : Html.LABEL
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject label_búsquedaDeRequerimientos(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("label_búsquedaDeRequerimientos"), anchor, flags);
+	}
+	
+	/**
+	 * VisualizarRequerimientoPresupuestario: with default state.
+	 *		.id : 
+	 * 		.value : 
+	 * 		.class : Html.LABEL
+	 * 		.title : 
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject label_visualizarRequerimientoP() 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("label_visualizarRequerimientoP"));
+	}
+	/**
+	 * VisualizarRequerimientoPresupuestario: with specific test context and state.
+	 *		.id : 
+	 * 		.value : 
+	 * 		.class : Html.LABEL
+	 * 		.title : 
+	 * 		.classIndex : 0
+	 */
+	protected GuiTestObject label_visualizarRequerimientoP(TestObject anchor, long flags) 
+	{
+		return new GuiTestObject(
+                        getMappedTestObject("label_visualizarRequerimientoP"), anchor, flags);
+	}
+	
+	/**
 	 * idTmpBIdTbRqB0LinkVisualizar: with default state.
 	 *		.text : Visualizar
-	 * 		.id : idTmpB:idTbRqB:0:linkVisualizar
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-buscar/busquedaRequeri ...
-	 * 		.class : Html.A
+	 * 		.id : idTmpB:idTbRqB:0:linkVisualizar
 	 * 		.title : 
+	 * 		.class : Html.A
 	 * 		.name : 
 	 * 		.classIndex : 1
 	 */
@@ -171,10 +548,10 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	/**
 	 * idTmpBIdTbRqB0LinkVisualizar: with specific test context and state.
 	 *		.text : Visualizar
-	 * 		.id : idTmpB:idTbRqB:0:linkVisualizar
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-buscar/busquedaRequeri ...
-	 * 		.class : Html.A
+	 * 		.id : idTmpB:idTbRqB:0:linkVisualizar
 	 * 		.title : 
+	 * 		.class : Html.A
 	 * 		.name : 
 	 * 		.classIndex : 1
 	 */
@@ -187,10 +564,10 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	/**
 	 * IrABienvenida: with default state.
 	 *		.text : noMostrar
-	 * 		.id : idTmpB:goBienvenida
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-buscar/busquedaRequeri ...
-	 * 		.class : Html.A
+	 * 		.id : idTmpB:goBienvenida
 	 * 		.title : Ir a Bienvenida!
+	 * 		.class : Html.A
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -202,10 +579,10 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	/**
 	 * IrABienvenida: with specific test context and state.
 	 *		.text : noMostrar
-	 * 		.id : idTmpB:goBienvenida
 	 * 		.href : http://192.168.203.10/sigfe/faces/task-flow-requerimiento-buscar/busquedaRequeri ...
-	 * 		.class : Html.A
+	 * 		.id : idTmpB:goBienvenida
 	 * 		.title : Ir a Bienvenida!
+	 * 		.class : Html.A
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -218,10 +595,10 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	/**
 	 * IrABienvenida: with default state.
 	 *		.text : noMostrar
-	 * 		.id : idPgTpl:goBienvenida
 	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenida?_adf.ctrl-state=10ay1znz2_14&_afrLo ...
-	 * 		.class : Html.A
+	 * 		.id : idPgTpl:goBienvenida
 	 * 		.title : Ir a Bienvenida!
+	 * 		.class : Html.A
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -233,10 +610,10 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	/**
 	 * IrABienvenida: with specific test context and state.
 	 *		.text : noMostrar
-	 * 		.id : idPgTpl:goBienvenida
 	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenida?_adf.ctrl-state=10ay1znz2_14&_afrLo ...
-	 * 		.class : Html.A
+	 * 		.id : idPgTpl:goBienvenida
 	 * 		.title : Ir a Bienvenida!
+	 * 		.class : Html.A
 	 * 		.name : 
 	 * 		.classIndex : 0
 	 */
@@ -249,8 +626,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	/**
 	 * Requerimiento: with default state.
 	 *		.text : Requerimiento
-	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenida?_adf.ctrl-state=10ay1znz2_14&_afrLo ...
 	 * 		.id : 
+	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenida?_adf.ctrl-state=10ay1znz2_14&_afrLo ...
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -264,8 +641,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	/**
 	 * Requerimiento: with specific test context and state.
 	 *		.text : Requerimiento
-	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenida?_adf.ctrl-state=10ay1znz2_14&_afrLo ...
 	 * 		.id : 
+	 * 		.href : http://192.168.203.10/sigfe/faces/bienvenida?_adf.ctrl-state=10ay1znz2_14&_afrLo ...
 	 * 		.title : 
 	 * 		.class : Html.A
 	 * 		.name : 
@@ -278,10 +655,52 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	}
 	
 	/**
+	 * BúsquedaDeRequerimientosPresupuestarios: with default state.
+	 *		.class : Html.HtmlBrowser.Tab
+	 * 		.name : Búsqueda de Requerimientos Presupuestarios
+	 */
+	protected BrowserTabTestObject pageTab_búsquedaDeRequerimient() 
+	{
+		return new BrowserTabTestObject(
+                        getMappedTestObject("pageTab_búsquedaDeRequerimient"));
+	}
+	/**
+	 * BúsquedaDeRequerimientosPresupuestarios: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.Tab
+	 * 		.name : Búsqueda de Requerimientos Presupuestarios
+	 */
+	protected BrowserTabTestObject pageTab_búsquedaDeRequerimient(TestObject anchor, long flags) 
+	{
+		return new BrowserTabTestObject(
+                        getMappedTestObject("pageTab_búsquedaDeRequerimient"), anchor, flags);
+	}
+	
+	/**
+	 * OpenANewTab: with default state.
+	 *		.class : Html.HtmlBrowser.Tab
+	 * 		.name : Open a new tab
+	 */
+	protected BrowserTabTestObject pageTab_openANewTab() 
+	{
+		return new BrowserTabTestObject(
+                        getMappedTestObject("pageTab_openANewTab"));
+	}
+	/**
+	 * OpenANewTab: with specific test context and state.
+	 *		.class : Html.HtmlBrowser.Tab
+	 * 		.name : Open a new tab
+	 */
+	protected BrowserTabTestObject pageTab_openANewTab(TestObject anchor, long flags) 
+	{
+		return new BrowserTabTestObject(
+                        getMappedTestObject("pageTab_openANewTab"), anchor, flags);
+	}
+	
+	/**
 	 * HtmlTable_0: with default state.
 	 *		.id : 
-	 * 		.class : Html.TABLE
 	 * 		.title : 
+	 * 		.class : Html.TABLE
 	 * 		.caption : 
 	 * 		.classIndex : 0
 	 */
@@ -293,8 +712,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	/**
 	 * HtmlTable_0: with specific test context and state.
 	 *		.id : 
-	 * 		.class : Html.TABLE
 	 * 		.title : 
+	 * 		.class : Html.TABLE
 	 * 		.caption : 
 	 * 		.classIndex : 0
 	 */
@@ -302,6 +721,60 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	{
 		return new StatelessGuiSubitemTestObject(
                         getMappedTestObject("table_htmlTable_0"), anchor, flags);
+	}
+	
+	/**
+	 * HtmlTable_0: with default state.
+	 *		.id : 
+	 * 		.title : 
+	 * 		.class : Html.TABLE
+	 * 		.caption : 
+	 * 		.classIndex : 0
+	 */
+	protected StatelessGuiSubitemTestObject table_htmlTable_0_2() 
+	{
+		return new StatelessGuiSubitemTestObject(
+                        getMappedTestObject("table_htmlTable_0_2"));
+	}
+	/**
+	 * HtmlTable_0: with specific test context and state.
+	 *		.id : 
+	 * 		.title : 
+	 * 		.class : Html.TABLE
+	 * 		.caption : 
+	 * 		.classIndex : 0
+	 */
+	protected StatelessGuiSubitemTestObject table_htmlTable_0_2(TestObject anchor, long flags) 
+	{
+		return new StatelessGuiSubitemTestObject(
+                        getMappedTestObject("table_htmlTable_0_2"), anchor, flags);
+	}
+	
+	/**
+	 * HtmlTable_0: with default state.
+	 *		.id : 
+	 * 		.title : 
+	 * 		.class : Html.TABLE
+	 * 		.caption : 
+	 * 		.classIndex : 0
+	 */
+	protected StatelessGuiSubitemTestObject table_htmlTable_0_3() 
+	{
+		return new StatelessGuiSubitemTestObject(
+                        getMappedTestObject("table_htmlTable_0_3"));
+	}
+	/**
+	 * HtmlTable_0: with specific test context and state.
+	 *		.id : 
+	 * 		.title : 
+	 * 		.class : Html.TABLE
+	 * 		.caption : 
+	 * 		.classIndex : 0
+	 */
+	protected StatelessGuiSubitemTestObject table_htmlTable_0_3(TestObject anchor, long flags) 
+	{
+		return new StatelessGuiSubitemTestObject(
+                        getMappedTestObject("table_htmlTable_0_3"), anchor, flags);
 	}
 	
 	/**
@@ -335,8 +808,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	 * _1164425: with default state.
 	 *		.id : idTmpB:idTransaccional::content
 	 * 		.type : text
-	 * 		.class : Html.INPUT.text
 	 * 		.title : 1.164.425
+	 * 		.class : Html.INPUT.text
 	 * 		.name : idTmpB:idTransaccional
 	 * 		.classIndex : 0
 	 */
@@ -349,8 +822,8 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	 * _1164425: with specific test context and state.
 	 *		.id : idTmpB:idTransaccional::content
 	 * 		.type : text
-	 * 		.class : Html.INPUT.text
 	 * 		.title : 1.164.425
+	 * 		.class : Html.INPUT.text
 	 * 		.name : idTmpB:idTransaccional
 	 * 		.classIndex : 0
 	 */
@@ -361,15 +834,51 @@ public abstract class RP_Multiple_Gastos_Moneda_Nacional_AprobarHelper extends R
 	}
 	
 	/**
-	 * Locate and return the verification point HtmlTable_0_text object in the SUT.
+	 * Locate and return the verification point PV_BusquedaRP object in the SUT.
 	 */
-	protected IFtVerificationPoint HtmlTable_0_textVP() 
+	protected IFtVerificationPoint PV_BusquedaRPVP() 
 	{
-		return vp("HtmlTable_0_text");
+		return vp("PV_BusquedaRP");
 	}
-	protected IFtVerificationPoint HtmlTable_0_textVP(TestObject anchor)
+	protected IFtVerificationPoint PV_BusquedaRPVP(TestObject anchor)
 	{
-		return vp("HtmlTable_0_text", anchor);
+		return vp("PV_BusquedaRP", anchor);
+	}
+	
+	/**
+	 * Locate and return the verification point PV_ConfirmaAprobacion object in the SUT.
+	 */
+	protected IFtVerificationPoint PV_ConfirmaAprobacionVP() 
+	{
+		return vp("PV_ConfirmaAprobacion");
+	}
+	protected IFtVerificationPoint PV_ConfirmaAprobacionVP(TestObject anchor)
+	{
+		return vp("PV_ConfirmaAprobacion", anchor);
+	}
+	
+	/**
+	 * Locate and return the verification point PV_RPAprobado object in the SUT.
+	 */
+	protected IFtVerificationPoint PV_RPAprobadoVP() 
+	{
+		return vp("PV_RPAprobado");
+	}
+	protected IFtVerificationPoint PV_RPAprobadoVP(TestObject anchor)
+	{
+		return vp("PV_RPAprobado", anchor);
+	}
+	
+	/**
+	 * Locate and return the verification point PV_RPGenerado_Encontrado object in the SUT.
+	 */
+	protected IFtVerificationPoint PV_RPGenerado_EncontradoVP() 
+	{
+		return vp("PV_RPGenerado_Encontrado");
+	}
+	protected IFtVerificationPoint PV_RPGenerado_EncontradoVP(TestObject anchor)
+	{
+		return vp("PV_RPGenerado_Encontrado", anchor);
 	}
 	
 	
