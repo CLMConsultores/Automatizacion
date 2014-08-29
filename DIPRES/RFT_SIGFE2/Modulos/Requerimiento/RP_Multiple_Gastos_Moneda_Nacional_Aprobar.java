@@ -25,7 +25,7 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Aprobar extends RP_Multiple_Gast
 	 * Original Host : WinNT Version 5.1  Build 2600 (S)
 	 * 
 	 * @since  2014/08/26
-	 * @author cpena
+	 * @author Daniel Palma
 	 */
 	public void testMain(Object[] args) 
 	{
@@ -39,7 +39,6 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Aprobar extends RP_Multiple_Gast
 			return;
 		}
 		// Menú Buscar
-		// Document: Bienvenid@ a SIGFE: http://192.168.203.10/sigfe/faces/bienvenida?_adf.ctrl-state=10ay1znz2_14&_afrLoop=491936980492953
 		link_requerimiento().click();
 		table_idPgTplJ_id11Menu().click(atCell(
                                         atRow(atIndex(0)), 
@@ -47,7 +46,6 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Aprobar extends RP_Multiple_Gast
 
 		
 		// HTML Browser
-		// Document: Búsqueda de Requerimientos Presupuestarios: http://192.168.203.10/sigfe/faces/task-flow-requerimiento-buscar/busquedaRequerimiento?_adf.ctrl-state=10ay1znz2_88&_afrLoop=492386081445809
 		label_búsquedaDeRequerimientos().performTest(
                                         PV_BusquedaRPVP(), 2.0, 
                                         10.0);
