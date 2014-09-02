@@ -29,16 +29,16 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Generar extends RP_Multiple_Gast
 	 */
 	public void testMain(Object[] args) 
 	{
-		/**Inicio de Sesion**/
-		/****************************************************************************/
-		startApp("T03");
-		
-		// HTML Browser
-		// Document: Autenticacion: http://192.168.203.10/sigfe/faces/autenticacion?_afrLoop=427905388800638&_afrWindowMode=0&_adf.ctrl-state=hpa6rjt9u_9
-		text_j_username().setText("Usua_0401013");
-		text_j_password().setText("usuario1234");
-		button_ingresarsubmit().click();
-		/****************************************************************************/
+//		/**Inicio de Sesion**/
+//		/****************************************************************************/
+//		startApp("T03");
+//		
+//		// HTML Browser
+//		// Document: Autenticacion: http://192.168.203.10/sigfe/faces/autenticacion?_afrLoop=427905388800638&_afrWindowMode=0&_adf.ctrl-state=hpa6rjt9u_9
+//		text_j_username().setText("Usua_0401013");
+//		text_j_password().setText("usuario1234");
+//		button_ingresarsubmit().click();
+//		/****************************************************************************/
 		
 		
 		/**Acceso a la transaccion**/
@@ -171,7 +171,9 @@ public class RP_Multiple_Gastos_Moneda_Nacional_Generar extends RP_Multiple_Gast
 			
 		}while(!iDP_RP_CombCat.dpDone() && iDP_RP_CombCat.dpString("RP_CAT_ID").equals(sRP_ID + iContador));
 		/****************************************************************************/
-		
+		// Resetear el datapool
+		iDP_RP_CombCat.dpReset();
+		iDP_RP_ConcPres.dpReset();
 		
 		/**Guardar Digitado**/
 		sleep(2.0);
